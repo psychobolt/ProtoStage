@@ -1,8 +1,8 @@
 # ProtoAtelier
 
-[![Build Status](https://travis-ci.org/psychobolt/whitestorm-react-electron-boilerplate.svg?branch=master)](https://travis-ci.org/psychobolt/whitestorm-react-electron-boilerplate)
-[![Dependencies Status](https://david-dm.org/psychobolt/whitestorm-react-electron-boilerplate.svg)](https://david-dm.org/psychobolt/whitestorm-react-electron-boilerplate)
-[![codecov](https://codecov.io/gh/psychobolt/whitestorm-react-electron-boilerplate/branch/master/graph/badge.svg)](https://codecov.io/gh/psychobolt/whitestorm-react-electron-boilerplate)
+[![Build Status](https://travis-ci.org/psychobolt/ProtoAtelier.svg?branch=master)](https://travis-ci.org/psychobolt/ProtoAtelier)
+[![Dependencies Status](https://david-dm.org/psychobolt/ProtoAtelier.svg)](https://david-dm.org/psychobolt/ProtoAtelier)
+[![codecov](https://codecov.io/gh/psychobolt/ProtoAteliere/branch/master/graph/badge.svg)](https://codecov.io/gh/psychobolt/ProtoAtelier)
 
 ProtoAtelier is a upcoming simplistic editor for crafting and prototyping next generation interactive applications. See our [wiki page](https://github.com/psychobolt/ProtoAtelier/wiki/About) for more information.
 
