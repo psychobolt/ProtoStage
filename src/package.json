@@ -1,0 +1,10 @@
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  "main": ".build/main.bundle.js",
+  "repository": "https://github.com/psychobolt/react-electron-boilerplate",
+  "author": "psychobolt",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}

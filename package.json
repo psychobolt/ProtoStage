@@ -1,0 +1,153 @@
+{
+  "name": "react-electron-boilerplate",
+  "version": "1.0.0",
+  "description": "The essential framework for React-Electron development.",
+  "main": "src/.build/main.bundle.js",
+  "scripts": {
+    "postinstall": "rimraf flow-typed/npm && npm run flow-typed-install:dev && npm run flow-typed-install:app && electron-builder install-app-deps",
+    "flow-typed-install:dev": "flow-typed install -s -o",
+    "flow-typed-install:app": "cd src/ && flow-typed install -s -o --packageDir ../ || true",
+    "build.app:prod": "cross-env BABEL_ENV=commonjs NODE_ENV=production webpack --config webpack.app.babel.js",
+    "build.main:dev": "cross-env BABEL_ENV=commonjs NODE_ENV=development webpack --config webpack.main.babel.js",
+    "build:prod": "npm run build.app:prod && cross-env BABEL_ENV=commonjs NODE_ENV=production webpack --config webpack.main.babel.js",
+    "build:dist": "electron-builder",
+    "build": "npm run build:prod && npm run build:dist",
+    "start": "npm run dev",
+    "dev": "npm run build.main:dev && cross-env NODE_ENV=development electron .",
+    "prod": "npm run build:prod && electron .",
+    "watch": "cross-env BABEL_ENV=commonjs NODE_ENV=development babel-node server",
+    "test": "cross-env BABEL_ENV=commonjs jest",
+    "test-e2e": "ava",
+    "lint": "eslint src e2e *.js",
+    "flow-typed": "flow-typed"
+  },
+  "build": {
+    "linux": {
+      "target": [
+        "AppImage",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "directories": {
+      "buildResources": "resources",
+      "app": "src"
+    }
+  },
+  "ava": {
+    "files": [
+      "e2e/**/*.js",
+      "!src/**/*"
+    ]
+  },
+  "jest": {
+    "setupFiles": [
+      "./test-config.js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!**/main.js",
+      "!**/.build/**",
+      "!src/**/(index|store|reducer|globals).js",
+      "!src/Shared/store/**/*"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/e2e/"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/file.mock.js",
+      "\\.(css|less)$": "<rootDir>/__mocks__/style.mock.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psychobolt/react-electron-boilerplate.git"
+  },
+  "author": "psychobolt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/psychobolt/react-electron-boilerplate/issues"
+  },
+  "homepage": "https://github.com/psychobolt/react-electron-boilerplate#readme",
+  "devDependencies": {
+    "ava": "^0.22.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-module-resolver": "^2.7.1",
+    "babel-plugin-transform-builtin-classes": "^0.4.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "babel-runtime": "^6.26.0",
+    "cash-true": "^0.0.2",
+    "clean-webpack-plugin": "^0.1.17",
+    "cross-env": "^5.0.5",
+    "css-hot-loader": "^1.3.1",
+    "css-loader": "^0.28.7",
+    "electron": "~1.7.8",
+    "electron-builder": "^19.31.1",
+    "electron-devtools-installer": "^2.2.0",
+    "enzyme": "^3.0.0",
+    "enzyme-adapter-react-16": "^1.0.0",
+    "enzyme-to-json": "^3.0.0",
+    "eslint": "^4.7.2",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-import-resolver-babel-module": "^3.0.0",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-flowtype": "^2.36.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jest": "^21.2.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.4.0",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "file-loader": "^0.11.2",
+    "flow-bin": "^0.55.0",
+    "flow-typed": "^2.1.5",
+    "html-loader": "^0.5.1",
+    "html-webpack-plugin": "^2.30.1",
+    "jest": "^21.2.0",
+    "node-sass": "^4.5.3",
+    "optimize-css-assets-webpack-plugin": "^3.2.0",
+    "react-hot-loader": "3.0.0-beta.7",
+    "react-test-renderer": "^16.0.0",
+    "redux-devtools-extension": "^2.13.2",
+    "redux-mock-store": "^1.3.0",
+    "rimraf": "^2.6.2",
+    "sass-loader": "^6.0.6",
+    "spectron": "^3.7.2",
+    "style-loader": "^0.18.2",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.8.2",
+    "webpack-merge": "^4.1.0"
+  },
+  "dependencies": {
+    "history": "^4.7.2",
+    "jquery": "^3.2.1",
+    "raf": "^3.3.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "5.0.0-alpha.6",
+    "react-whs": "https://github.com/psychobolt/react-whs.git#build",
+    "redux": "^3.7.2",
+    "typeface-roboto": "^0.0.35",
+    "typeface-roboto-mono": "^0.0.35",
+    "xel": "^0.0.63"
+  }
+}
