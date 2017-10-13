@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron';
+import windowStateKeeper from 'electron-window-state';
 import path from 'path';
 
 const url = require('url');
@@ -14,8 +15,21 @@ async function installExtension() {
 }
 
 async function createWindow() {
+  const mainWindowState = windowStateKeeper({
+    defaultWidth: 1024,
+    defaultHeight: 768,
+  });
+
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600 });
+  win = new BrowserWindow({
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
+  });
+
+  // then register listeners on window, so the state can be updated
+  mainWindowState.manage(win);
 
   // and load the index.html of the app.
   if (process.env.NODE_ENV === 'production') {

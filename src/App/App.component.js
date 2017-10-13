@@ -1,12 +1,11 @@
 import React from 'react';
+import { Route } from 'react-router-dom';
 
-import Header from './Header';
-import World from './World';
+import Dashboard from './Dashboard';
 import styles from './App.style';
 
-export default (props) => (
+export default () => (
   <div style={styles.container}>
-    <div style={styles.header}><Header centered /></div>
-    <World style={{ container: styles.worldContainer }} {...props} />
+    <Route path="/" component={Dashboard} />
   </div>
 );

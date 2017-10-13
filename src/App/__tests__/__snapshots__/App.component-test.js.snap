@@ -9,26 +9,9 @@ exports[`component <App /> should render correctly 1`] = `
     }
   }
 >
-  <div
-    style={
-      Object {
-        "margin": "5px",
-      }
-    }
-  >
-    <Header
-      centered={true}
-    />
-  </div>
-  <World
-    style={
-      Object {
-        "container": Object {
-          "height": "calc(100% - 33px)",
-          "width": "100%",
-        },
-      }
-    }
+  <Route
+    component={[Function]}
+    path="/"
   />
 </div>
 `;

@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "proto-atelier-src",
   "version": "1.0.0",
   "main": ".build/main.bundle.js",
   "repository": "https://github.com/psychobolt/react-electron-boilerplate",
