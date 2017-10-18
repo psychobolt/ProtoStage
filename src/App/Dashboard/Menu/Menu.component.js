@@ -34,7 +34,7 @@ const Menu = () => (
       </header>
       <main>
         <x-buttons style={styles.buttonContainer}>
-          <x-box vertical>
+          <x-box vertical style={styles.buttonContainer}>
             <x-button skin="nav" style={styles.button}>
               <x-label>Coming soon</x-label>
             </x-button>

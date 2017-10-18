@@ -7,6 +7,10 @@ body {
     height: 100%;
 }
 
+html {
+  @include full-container;
+}
+
 .root-container {
     @include full-container;
 

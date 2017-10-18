@@ -2,10 +2,12 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import Dashboard from './Dashboard';
+import Editor from './Editor';
 import styles from './App.style';
 
 export default () => (
   <div style={styles.container}>
-    <Route path="/" component={Dashboard} />
+    <Route exact path="/" component={Dashboard} />
+    <Route path="/editor" component={Editor} />
   </div>
 );
