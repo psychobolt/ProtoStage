@@ -5,6 +5,7 @@ import CleanWebpackPlugin from 'clean-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 
 import CommonConfig from './webpack.common';
 
@@ -22,6 +23,10 @@ let config = {
     rules: [
       {
         test: /\xel.min.js$/,
+        use: ['babel-loader'],
+      },
+      {
+        test: /react-fiber-export/,
         use: ['babel-loader'],
       },
       {
@@ -118,7 +123,7 @@ if (process.env.NODE_ENV === 'development') {
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('production'),
       }),
-      new webpack.optimize.UglifyJsPlugin(),
+      new UglifyJsPlugin(),
       new OptimizeCssAssetsPlugin({
         cssProcessorOptions: { discardComments: { removeAll: true } },
       }),

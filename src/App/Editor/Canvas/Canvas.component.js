@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { View } from 'react-paper-bindings';
+import { PaperScope } from 'paper/dist/paper-core';
 
 import withResizableContainer from 'Framework/ReactResizableContainer';
 
@@ -13,11 +13,23 @@ type Props = {
 class Canvas extends React.Component<Props> {
   componentDidMount() {
     this.props.registerResizeListener();
+
+    this.paper = new PaperScope();
+    this.paper.setup(this.canvas);
   }
+
+  canvas: ?HTMLCanvasElement
+  paper: PaperScope
 
   render() {
     const { containerWidth, containerHeight } = this.props;
-    return <View width={containerWidth} height={containerHeight} />;
+    return (
+      <canvas
+        width={containerWidth}
+        height={containerHeight}
+        ref={el => { this.canvas = el; }}
+      />
+    );
   }
 }
 
