@@ -1,8 +1,9 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import path from 'path';
+import url from 'url';
 
-const url = require('url');
+import menu from './menu';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -55,6 +56,8 @@ async function createWindow() {
     // when you should delete the corresponding element.
     win = null;
   });
+
+  Menu.setApplicationMenu(menu());
 }
 
 // This method will be called when Electron has finished

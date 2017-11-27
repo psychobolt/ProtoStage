@@ -19,6 +19,7 @@ let config = {
     filename: 'app.bundle.js',
     path: path.resolve(__dirname, 'src', '.build'),
   },
+  target: 'electron-renderer',
   module: {
     rules: [
       {
@@ -82,7 +83,7 @@ let htmlConfig = {
 
 if (process.env.NODE_ENV === 'development') {
   config = merge(config, {
-    devtool: 'inline-source-map',
+    devtool: 'eval-source-map',
     plugins: [
       new webpack.NamedModulesPlugin(),
       new webpack.HotModuleReplacementPlugin(),
