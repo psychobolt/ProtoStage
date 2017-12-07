@@ -35,7 +35,7 @@ let config = {
         use: ['html-loader'],
       },
       {
-        test: /\.scss$/,
+        test: /\.(css|scss)$/,
         include: path.resolve(__dirname, 'src'),
         exclude: /node_modules/,
         use: ['css-hot-loader'].concat(appCSS.extract({
@@ -64,7 +64,7 @@ let config = {
         }),
       },
       {
-        test: /\.(png|jpg|gif|svg|woff|woff2|ttf|otf|eot)$/,
+        test: /\.(png|jpg|gif|svg|woff|woff2|ttf|otf|eot)(\?[a-z0-9=.]+)?$/,
         use: ['file-loader'],
       },
     ],

@@ -1,9 +1,18 @@
 import { app, BrowserWindow, Menu } from 'electron';
+import { forwardToRenderer, replayActionMain } from 'electron-redux';
 import windowStateKeeper from 'electron-window-state';
+import { combineReducers } from 'redux';
 import path from 'path';
 import url from 'url';
 
+import initialState from './App/App.state';
+import reducers from './App/App.reducers';
+import configureStore from './shared/store';
 import menu from './menu';
+
+const store = configureStore(combineReducers(reducers), initialState, [forwardToRenderer]);
+
+replayActionMain(store);
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -57,7 +66,7 @@ async function createWindow() {
     win = null;
   });
 
-  Menu.setApplicationMenu(menu(win));
+  Menu.setApplicationMenu(menu(win, store));
 }
 
 // This method will be called when Electron has finished

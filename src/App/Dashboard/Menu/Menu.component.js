@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { RouteLink } from 'Framework/ReactRouterHelpers';
 import styles from './Menu.styles';
 
 const Menu = () => (
@@ -20,9 +21,11 @@ const Menu = () => (
             <x-button skin="nav" style={styles.button}>
               <x-label>Top-down</x-label>
             </x-button>
-            <x-button skin="nav" style={styles.button}>
-              <x-label>Custom</x-label>
-            </x-button>
+            <RouteLink to="/editor">
+              <x-button skin="nav" style={styles.button}>
+                <x-label>Custom</x-label>
+              </x-button>
+            </RouteLink>
           </x-box>
         </x-buttons>
       </main>

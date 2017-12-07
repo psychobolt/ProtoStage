@@ -13,6 +13,7 @@
     "react"
   ],
   "plugins": [
+    "transform-decorators-legacy",
     ["transform-runtime", { "polyfill": false }],
     ["babel-plugin-transform-builtin-classes", {
       "globals": ["HTMLElement"]
