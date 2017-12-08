@@ -10,7 +10,7 @@ const Menu = () => (
     </header>
     <x-accordion expanded>
       <header>
-        <x-label>2D/3D Game</x-label>
+        <x-label>2D/3D Simulation</x-label>
       </header>
       <main>
         <x-buttons style={styles.buttonContainer}>

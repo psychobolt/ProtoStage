@@ -1,7 +1,7 @@
 {
-  "name": "proto-atelier",
-  "version": "1.0.0",
-  "description": "The essential framework for React-Electron development.",
+  "name": "proto-stage",
+  "version": "0.0.1",
+  "description": "A upcoming simplistic editor for crafting and prototyping next generation interactive applications.",
   "main": "src/.build/main.bundle.js",
   "scripts": {
     "postinstall": "rimraf flow-typed/npm && npm run flow-typed-install:dev && npm run flow-typed-install:app && electron-builder install-app-deps",

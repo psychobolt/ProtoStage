@@ -1,10 +1,10 @@
-# ProtoAtelier
+# ProtoStage
 
-[![Build Status](https://travis-ci.org/psychobolt/ProtoAtelier.svg?branch=master)](https://travis-ci.org/psychobolt/ProtoAtelier)
-[![Dependencies Status](https://david-dm.org/psychobolt/ProtoAtelier.svg)](https://david-dm.org/psychobolt/ProtoAtelier)
-[![codecov](https://codecov.io/gh/psychobolt/ProtoAtelier/branch/master/graph/badge.svg)](https://codecov.io/gh/psychobolt/ProtoAtelier)
+[![Build Status](https://travis-ci.org/psychobolt/ProtoStage.svg?branch=master)](https://travis-ci.org/psychobolt/ProtoStage)
+[![Dependencies Status](https://david-dm.org/psychobolt/ProtoStage.svg)](https://david-dm.org/psychobolt/ProtoStage)
+[![codecov](https://codecov.io/gh/psychobolt/ProtoStage/branch/master/graph/badge.svg)](https://codecov.io/gh/psychobolt/ProtoStage)
 
-ProtoAtelier is a upcoming simplistic editor for crafting and prototyping next generation interactive applications. See our [wiki page](https://github.com/psychobolt/ProtoAtelier/wiki/About) for more information.
+ProtoStage is a upcoming simplistic editor for crafting and prototyping next generation interactive applications. See our [wiki page](https://github.com/psychobolt/ProtoStage/wiki/About) for more information.
 
 ## Development
 
