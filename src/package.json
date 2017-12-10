@@ -1,6 +1,6 @@
 {
-  "name": "proto-atelier-src",
-  "version": "1.0.0",
+  "name": "proto-stage-app",
+  "version": "0.0.1",
   "main": ".build/main.bundle.js",
   "repository": "https://github.com/psychobolt/react-electron-boilerplate",
   "author": "psychobolt",

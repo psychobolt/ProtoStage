@@ -9,10 +9,12 @@ export type Canvas = {
   paths: {
     [number]: Path
   },
-  pathIds: number[]
+  pathIds: number[],
+  selectedPathIds: number[],
 };
 
 export default {
   paths: {},
   pathIds: [],
+  selectedPathIds: [],
 };

@@ -1,5 +1,6 @@
 export const Actions = {
   ADD_PATH: 'addPath',
+  UPDATE_PATH: 'updatePath',
 };
 
 let nextPathId = 0;
@@ -11,3 +12,5 @@ export const addPath = path => ({
     ...path,
   },
 });
+
+export const updatePath = payload => ({ type: Actions.UPDATE_PATH, payload });

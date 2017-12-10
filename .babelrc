@@ -20,7 +20,10 @@
     }],
     ["module-resolver", { 
       "root": ["./src"],
-      "cwd": "./"
+      "cwd": "./",
+      "alias": {
+        "paper": "paper/dist/paper-core"
+      }
     }],
     "react-hot-loader/babel"
   ],

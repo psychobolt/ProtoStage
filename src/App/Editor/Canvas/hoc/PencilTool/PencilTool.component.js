@@ -6,7 +6,6 @@ import { addPath } from '../../Canvas.actions';
 import { Tool } from '../shared/Tool';
 
 export default Container =>
-  // $FlowFixMe
   @connect(undefined, dispatch => ({
     newPath: path => dispatch(addPath(path)),
   }))

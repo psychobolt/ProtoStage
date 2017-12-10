@@ -120,9 +120,9 @@
   dependencies:
     arrify "^1.0.1"
 
-"@psychobolt/react-paperjs@^0.0.23":
-  version "0.0.23"
-  resolved "https://registry.yarnpkg.com/@psychobolt/react-paperjs/-/react-paperjs-0.0.23.tgz#ef30280f634ed48ac86a80414608b350dc2465c1"
+"@psychobolt/react-paperjs@^0.0.30":
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/@psychobolt/react-paperjs/-/react-paperjs-0.0.30.tgz#f662deab9fd8e61e4a99e3ff4e8f97ad2f91964e"
   dependencies:
     lodash "^4.17.4"
     prop-types "^15.6.0"

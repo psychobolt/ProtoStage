@@ -3,4 +3,5 @@ export { default as withRectangleTool } from './RectangleTool';
 export { default as withLineTool } from './LineTool';
 export { default as withSelectTool } from './SelectTool';
 export { default as withPencilTool } from './PencilTool';
+export { default as withPolygonTool } from './PolygonTool';
 export * from './shared';

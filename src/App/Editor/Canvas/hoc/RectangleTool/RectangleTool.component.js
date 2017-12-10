@@ -20,7 +20,7 @@ export default Container =>
         type: this.TOOL_NAME,
         pathData: path.pathData,
         strokeColor: 'black',
-        fillColor: 'grey',
+        fillColor: 'white',
       });
     }
 
