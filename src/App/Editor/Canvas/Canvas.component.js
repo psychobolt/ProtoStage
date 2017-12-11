@@ -15,6 +15,7 @@ import {
   withSelectTool,
   withLineTool,
   withRectangleTool,
+  withCircleTool,
   withPolygonTool,
   type ToolProps,
 } from './hoc';
@@ -120,7 +121,7 @@ class Canvas extends React.Component<Props, State> {
   }
 
   getPaths = defaultMemoize((pathIds, paths) => pathIds.map(pathId => {
-    const { id, type: Path, tool, ...rest } = paths[pathId];
+    const { id, type: Path, ...rest } = paths[pathId];
     return <Path key={`path_${id}`} {...rest} />;
   }))
 
@@ -154,7 +155,6 @@ class Canvas extends React.Component<Props, State> {
           <PieMenu centerX={menuX} centerY={menuY}>
             {menuSlices}
             {/*
-            <Slice><i className="icon icon-circle-tool fa-2x" /></Slice>
             <Slice><i className="fa fa-i-cursor fa-2x" /></Slice>
             */}
           </PieMenu>
@@ -174,5 +174,6 @@ export default compose(
   withPencilTool,
   withLineTool,
   withRectangleTool,
+  withCircleTool,
   withPolygonTool,
 )(Canvas);
