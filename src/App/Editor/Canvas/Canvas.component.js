@@ -122,7 +122,7 @@ class Canvas extends React.Component<Props, State> {
 
   getPaths = defaultMemoize((pathIds, paths) => pathIds.map(pathId => {
     const { id, type: Path, ...rest } = paths[pathId];
-    return <Path key={`path_${id}`} {...rest} />;
+    return <Path data={{ pathId: id }} key={`path_${id}`} {...rest} />;
   }))
 
   lastActiveTool: string;

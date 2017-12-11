@@ -1,16 +1,30 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
 import { RectangleTool } from '@psychobolt/react-paperjs';
 
+import { selectPaths, deselectAll } from '../../Canvas.actions';
 import withTool from '../shared/Tool';
 
 type Props = {
-  instanceRef: Function
+  instanceRef: Function,
+  selectPaths: (ids: number[]) => void,
+  deselectAll: () => void
 };
 
+// $FlowFixMe
+@connect(undefined, dispatch => ({
+  selectPaths: ids => dispatch(selectPaths(ids)),
+  deselectAll: () => dispatch(deselectAll()),
+}))
 class SelectTool extends React.Component<Props> {
   onPathAdd = path => {
+    const { project, bounds } = path;
     path.remove();
+    const items = project.activeLayer.getItems({ overlapping: bounds })
+      .map(item => item.data.pathId);
+    if (items.length) this.props.selectPaths(items);
+    else this.props.deselectAll();
   }
 
   ref = ref => {

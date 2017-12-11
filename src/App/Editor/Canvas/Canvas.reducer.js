@@ -51,6 +51,34 @@ export default undoable((state = initialState, action) => {
         selectedPathIds,
       };
     }
+    case Actions.SELECT_PATHS: {
+      const { selectedPathIds } = action.payload;
+      const { paths, pathIds } = state;
+      const update = {};
+      pathIds.forEach(id => {
+        const path = paths[id];
+        const selected = path.selected || false;
+        const included = selectedPathIds.includes(id);
+        if (selected !== included) {
+          update[id] = { ...path, selected: included };
+        } else {
+          update[id] = path;
+        }
+      });
+      return { ...state, paths: update, selectedPathIds };
+    }
+    case Actions.DESELECT_ALL: {
+      const update = {};
+      state.pathIds.forEach(id => {
+        const path = state.paths[id];
+        if (path.selected) {
+          update[id] = { ...path, selected: false };
+        } else {
+          update[id] = path;
+        }
+      });
+      return { ...state, paths: update, selectedPathIds: [] };
+    }
     default:
       return state;
   }
