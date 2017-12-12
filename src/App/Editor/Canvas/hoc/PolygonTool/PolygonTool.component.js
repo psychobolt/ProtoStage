@@ -2,15 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { PolygonTool } from '@psychobolt/react-paperjs';
 
-import { addPath, updatePath } from '../../Canvas.actions';
+import { addPath, removePaths, updatePath, deselectAll } from '../../Canvas.actions';
 import { getCanvas } from '../../Canvas.selectors';
 import { Tool } from '../shared/Tool';
 
 export default Container =>
   @connect(
     state => {
-      const { paths, selectedPathIds } = getCanvas(state.editor);
-      return { paths, selectedPathIds };
+      const { paths, selectedPathIds, activeTool } = getCanvas(state.editor);
+      return { paths, selectedPathIds, lastActiveTool: activeTool };
     },
     dispatch => ({
       newPath: path => {
@@ -18,7 +18,9 @@ export default Container =>
         dispatch(newPath);
         return newPath.payload.id;
       },
+      removePaths: id => dispatch(removePaths(id)),
       updatePath: path => dispatch(updatePath(path)),
+      deselectAll: () => dispatch(deselectAll()),
     }),
   )
   class extends Tool {
@@ -27,18 +29,29 @@ export default Container =>
       pathData: '',
     }
 
-    componentWillReceiveProps({ selectedPathIds, paths }) {
-      super.componentDidUpdate();
-      const pathId = selectedPathIds.find(id => this.history.indexOf(id) > -1);
-      const path = paths[pathId];
-      if (path && (pathId !== this.state.pathId || path.pathData !== this.state.pathData)) {
-        this.setState({ pathId, pathData: path.pathData });
+    componentWillReceiveProps({ selectedPathIds, paths, lastActiveTool }) {
+      let { pathId } = this.state;
+      if (selectedPathIds.includes(pathId) && lastActiveTool !== this.TOOL_NAME) {
+        this.props.removePaths([pathId]);
+        this.setState({ pathId: null, pathData: '' });
+      } else {
+        pathId = selectedPathIds.find(id => this.history.includes(id));
+        const path = paths[pathId];
+        const pathData = path ? path.pathData : '';
+        if (pathId !== this.state.pathId || pathData !== this.state.pathData) {
+          this.setState({ pathId, pathData });
+        }
       }
     }
 
     getIcon = () => <i className="icon icon-closed-shape-tool fa-2x" />
 
     getTool = ref => <PolygonTool pathData={this.state.pathData} key={`${this.TOOL_NAME}Tool`} ref={ref} onSegmentAdd={this.onSegmentAdd} onPathAdd={this.onPathAdd} />
+
+    onSelect() {
+      super.onSelect();
+      if (this.props.selectedPathIds.length) this.props.deselectAll();
+    }
 
     onSegmentAdd = (segment, path) => {
       const { pathData } = path;
@@ -73,6 +86,7 @@ export default Container =>
         closed: true,
       });
       this.setState({ pathId: null, pathData: '' });
+      this.path = null;
     }
 
     TOOL_NAME = 'Polygon'

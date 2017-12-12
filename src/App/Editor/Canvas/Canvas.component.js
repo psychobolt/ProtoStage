@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
 import PieMenu from 'react-pie-menu';
-// import { Path } from '@psychobolt/react-paperjs';
 import { withStateHandlers, compose } from 'recompose';
 import { defaultMemoize } from 'reselect';
 import typeof { MouseEvent, KeyEvent } from 'paper';
@@ -20,7 +20,9 @@ import {
   type ToolProps,
 } from './hoc';
 import Paper from './Paper';
+import { selectTool } from './Canvas.actions';
 import { type Canvas as CanvasProps } from './Canvas.state';
+import { getCanvas } from './Canvas.selectors';
 import styles from './Canvas.style';
 
 type Props = CanvasProps & ToolProps;
@@ -165,9 +167,19 @@ class Canvas extends React.Component<Props, State> {
 }
 
 export default compose(
+  connect(
+    state => {
+      const { activeTool } = getCanvas(state.editor);
+      return { lastActiveTool: activeTool };
+    },
+    dispatch => ({ storeToolHistory: tool => dispatch(selectTool(tool)) }),
+  ),
   withStateHandlers(
     { activeTool: 'Select' },
-    { setActiveTool: () => (activeTool: string) => ({ activeTool }) },
+    { setActiveTool: (state, props) => (activeTool: string) => {
+      props.storeToolHistory(activeTool);
+      return { activeTool };
+    } },
   ),
   withNoopTool,
   withSelectTool,

@@ -29,6 +29,8 @@ export default class Paper extends React.Component<Props> {
     this.forceUpdate();
   }
 
+  container: Object
+
   render() {
     const {
       onKeyUp,
