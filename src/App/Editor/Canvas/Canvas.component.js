@@ -11,6 +11,7 @@ import './assets/fontello/css/fontello.css';
 import {
   NOOP_TOOL_NAME,
   withNoopTool,
+  withMoveTool,
   withPencilTool,
   withSelectTool,
   withLineTool,
@@ -130,7 +131,7 @@ class Canvas extends React.Component<Props, State> {
   lastActiveTool: string;
 
   render() {
-    const { menuSlices, pathIds, paths, children } = this.props;
+    const { menuSlices, pathIds, paths, children, cursor } = this.props;
     const { mouseX, mouseY, menuX, menuY, enableMenu } = this.state;
     return (
       <div
@@ -148,6 +149,7 @@ class Canvas extends React.Component<Props, State> {
           onMouseMove={this.onMouseMove}
           onPanEnabled={this.onPanEnabled}
           onPanDisabled={this.onPanDisabled}
+          cursor={cursor}
         >
           {this.getPaths(pathIds, paths)}
           {children}
@@ -175,14 +177,18 @@ export default compose(
     dispatch => ({ storeToolHistory: tool => dispatch(selectTool(tool)) }),
   ),
   withStateHandlers(
-    { activeTool: 'Select' },
-    { setActiveTool: (state, props) => (activeTool: string) => {
-      props.storeToolHistory(activeTool);
-      return { activeTool };
-    } },
+    { activeTool: 'Select', cursor: 'auto' },
+    {
+      setActiveTool: (state, props) => (activeTool: string) => {
+        props.storeToolHistory(activeTool);
+        return { activeTool };
+      },
+      setCursor: () => (cursor: string) => ({ cursor }),
+    },
   ),
   withNoopTool,
   withSelectTool,
+  withMoveTool,
   withPencilTool,
   withLineTool,
   withRectangleTool,

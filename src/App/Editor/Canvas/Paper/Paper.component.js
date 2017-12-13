@@ -17,6 +17,7 @@ type Props = {
   onMouseMove: EventHandler,
   onPanEnabled: Function,
   onPanDisabled: Function,
+  cursor: string,
   children: Node
 };
 
@@ -43,6 +44,7 @@ export default class Paper extends React.Component<Props> {
       children,
       onPanEnabled,
       onPanDisabled,
+      cursor,
     } = this.props;
     return (
       <Container
@@ -51,6 +53,7 @@ export default class Paper extends React.Component<Props> {
           style: {
             width: '100%',
             height: '100%',
+            cursor,
           },
         }}
         viewProps={{

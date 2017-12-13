@@ -1,7 +1,8 @@
 export const Actions = {
   ADD_PATH: 'addPath',
   REMOVE_PATHS: 'removePaths',
-  UPDATE_PATH: 'updatePath',
+  UPDATE_PATHS: 'updatePaths',
+  SELECT_PATH: 'selectPath',
   SELECT_PATHS: 'selectPaths',
   DESELECT_ALL: 'deselectAll',
   SELECT_TOOL: 'selectTool',
@@ -19,7 +20,9 @@ export const addPath = path => ({
 
 export const removePaths = ids => ({ type: Actions.REMOVE_PATHS, payload: { ids } });
 
-export const updatePath = payload => ({ type: Actions.UPDATE_PATH, payload });
+export const updatePaths = payload => ({ type: Actions.UPDATE_PATHS, payload });
+
+export const selectPath = id => ({ type: Actions.SELECT_PATH, payload: { id } });
 
 export const selectPaths = selectedPathIds =>
   ({ type: Actions.SELECT_PATHS, payload: { selectedPathIds } });

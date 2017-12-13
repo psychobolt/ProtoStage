@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { PolygonTool } from '@psychobolt/react-paperjs';
 
-import { addPath, removePaths, updatePath, deselectAll } from '../../Canvas.actions';
+import { addPath, removePaths, updatePaths, deselectAll } from '../../Canvas.actions';
 import { getCanvas } from '../../Canvas.selectors';
 import { Tool } from '../shared/Tool';
 
@@ -19,7 +19,7 @@ export default Container =>
         return newPath.payload.id;
       },
       removePaths: id => dispatch(removePaths(id)),
-      updatePath: path => dispatch(updatePath(path)),
+      updatePath: path => dispatch(updatePaths([path])),
       deselectAll: () => dispatch(deselectAll()),
     }),
   )
@@ -31,7 +31,7 @@ export default Container =>
 
     componentWillReceiveProps({ selectedPathIds, paths, lastActiveTool }) {
       let { pathId } = this.state;
-      if (selectedPathIds.includes(pathId) && lastActiveTool !== this.TOOL_NAME) {
+      if (selectedPathIds.includes(pathId) && lastActiveTool !== this.TOOL_NAME && !paths[pathId].closed) {
         this.props.removePaths([pathId]);
         this.setState({ pathId: null, pathData: '' });
       } else {

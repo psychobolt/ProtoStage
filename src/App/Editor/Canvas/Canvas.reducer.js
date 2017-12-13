@@ -4,6 +4,46 @@ import initialState from './Canvas.state';
 import { Actions } from './Canvas.actions';
 import { Actions as GlobalActions } from '../../../shared/actions';
 
+function updatePaths(state, action) {
+  const { payload } = action;
+  if (!payload.every(({ id }) => state.pathIds.includes(id))) {
+    return state;
+  }
+  let { paths, selectedPathIds } = state;
+  payload.forEach(path => {
+    const { id } = path;
+    paths = {
+      ...paths,
+      [id]: {
+        ...paths[id],
+        ...path,
+      },
+    };
+    if (paths[id].selected) {
+      if (!selectedPathIds.includes(id)) {
+        selectedPathIds = selectedPathIds.concat(id);
+      }
+    } else {
+      const index = selectedPathIds.indexOf(id);
+      if (index > -1) {
+        selectedPathIds = selectedPathIds.slice(0, index - 1)
+          .concat(selectedPathIds.slice(index + 1));
+      }
+    }
+  });
+  return { ...state, paths, selectedPathIds };
+}
+
+function deselectAll(state) {
+  const update = {};
+  const { paths } = state;
+  state.selectedPathIds.forEach(id => {
+    const path = paths[id];
+    update[id] = { ...path, selected: false };
+  });
+  return { ...state, paths: { ...paths, ...update }, selectedPathIds: [] };
+}
+
 export default undoable((state = initialState, action) => {
   switch (action.type) {
     case Actions.ADD_PATH: {
@@ -28,37 +68,11 @@ export default undoable((state = initialState, action) => {
       selectedPathIds = selectedPathIds.filter(pathId => !ids.includes(pathId));
       return { ...state, paths, pathIds, selectedPathIds };
     }
-    case Actions.UPDATE_PATH: {
-      const { payload } = action;
-      const { id } = payload;
-      const { paths } = state;
-      const newState = {
-        ...state,
-        paths: {
-          ...paths,
-          [id]: {
-            ...paths[id],
-            ...payload,
-          },
-        },
-      };
-      let { selectedPathIds } = state;
-      if (newState.paths[id].selected) {
-        if (!selectedPathIds.includes(id)) {
-          selectedPathIds = selectedPathIds.concat(id);
-        }
-      } else {
-        const index = selectedPathIds.indexOf(id);
-        if (index > -1) {
-          selectedPathIds = selectedPathIds.slice(0, index - 1)
-            .concat(selectedPathIds.slice(index + 1));
-        }
-      }
-      return {
-        ...newState,
-        selectedPathIds,
-      };
-    }
+    case Actions.UPDATE_PATHS: return updatePaths(state, action);
+    case Actions.SELECT_PATH: return updatePaths(
+      deselectAll(state),
+      { ...action, payload: [{ ...action.payload, selected: true }] },
+    );
     case Actions.SELECT_PATHS: {
       const { selectedPathIds } = action.payload;
       const { paths, pathIds } = state;
@@ -75,21 +89,8 @@ export default undoable((state = initialState, action) => {
       });
       return { ...state, paths: update, selectedPathIds };
     }
-    case Actions.DESELECT_ALL: {
-      const update = {};
-      state.pathIds.forEach(id => {
-        const path = state.paths[id];
-        if (path.selected) {
-          update[id] = { ...path, selected: false };
-        } else {
-          update[id] = path;
-        }
-      });
-      return { ...state, paths: update, selectedPathIds: [] };
-    }
-    case Actions.SELECT_TOOL: {
-      return { ...state, activeTool: action.payload.tool };
-    }
+    case Actions.DESELECT_ALL: return deselectAll(state);
+    case Actions.SELECT_TOOL: return { ...state, activeTool: action.payload.tool };
     default:
       return state;
   }
