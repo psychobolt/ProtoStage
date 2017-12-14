@@ -1,7 +1,10 @@
 # ProtoStage
 
-[![Build Status](https://travis-ci.org/psychobolt/ProtoStage.svg?branch=master)](https://travis-ci.org/psychobolt/ProtoStage)
 [![Dependencies Status](https://david-dm.org/psychobolt/ProtoStage.svg)](https://david-dm.org/psychobolt/ProtoStage)
+[![Dev Dependencies Status](https://david-dm.org/psychobolt/ProtoStage/dev-status.svg)](https://david-dm.org/psychobolt/ProtoStage?type=dev)
+[![Peer Dependencies Status](https://david-dm.org/psychobolt/ProtoStage/peer-status.svg)](https://david-dm.org/psychobolt/ProtoStage?type=peer)
+
+[![Build Status](https://travis-ci.org/psychobolt/ProtoStage.svg?branch=master)](https://travis-ci.org/psychobolt/ProtoStage)
 [![codecov](https://codecov.io/gh/psychobolt/ProtoStage/branch/master/graph/badge.svg)](https://codecov.io/gh/psychobolt/ProtoStage)
 
 ProtoStage is a upcoming simplistic editor for crafting and prototyping next generation interactive applications. See our [wiki page](https://github.com/psychobolt/ProtoStage/wiki/About) for more information.
