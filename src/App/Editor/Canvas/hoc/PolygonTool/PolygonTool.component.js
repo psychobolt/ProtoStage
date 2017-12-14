@@ -31,7 +31,8 @@ export default Container =>
 
     componentWillReceiveProps({ selectedPathIds, paths, lastActiveTool }) {
       let { pathId } = this.state;
-      if (selectedPathIds.includes(pathId) && lastActiveTool !== this.TOOL_NAME && !paths[pathId].closed) {
+      if (selectedPathIds.includes(pathId) && lastActiveTool !== this.TOOL_NAME
+          && !paths[pathId].closed) {
         this.props.removePaths([pathId]);
         this.setState({ pathId: null, pathData: '' });
       } else {
