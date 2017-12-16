@@ -3,13 +3,20 @@ import { connect } from 'react-redux';
 import { RectangleTool } from '@psychobolt/react-paperjs';
 
 import { selectPaths, deselectAll } from '../../Canvas.actions';
+import { getCanvas } from '../../Canvas.selectors';
 import { Tool } from '../shared/Tool';
 
 export default Container =>
-  @connect(undefined, dispatch => ({
-    selectPaths: ids => dispatch(selectPaths(ids)),
-    deselectAll: () => dispatch(deselectAll()),
-  }))
+  @connect(
+    state => {
+      const { selectedPathIds } = getCanvas(state.editor);
+      return { selectedPathIds };
+    },
+    dispatch => ({
+      selectPaths: ids => dispatch(selectPaths(ids)),
+      deselectAll: () => dispatch(deselectAll()),
+    }),
+  )
   class SelectTool extends Tool {
     getIcon = () => <i className="fa fa-mouse-pointer fa-2x" />
 
@@ -18,10 +25,11 @@ export default Container =>
     onPathAdd = path => {
       const { project, bounds } = path;
       path.remove();
-      const items = project.activeLayer.getItems({ overlapping: bounds })
+      const items = project.layers.reduce((collection, layer) =>
+        collection.concat(layer.getItems({ overlapping: bounds })), [])
         .map(item => item.data.pathId);
       if (items.length) this.props.selectPaths(items);
-      else this.props.deselectAll();
+      else if (this.props.selectedPathIds.length) this.props.deselectAll();
     }
 
     TOOL_NAME = 'Select'

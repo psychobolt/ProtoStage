@@ -49,23 +49,37 @@ export default undoable((state = initialState, action) => {
     case Actions.ADD_PATH: {
       const { payload } = action;
       const { id, selected } = payload;
-      const { pathIds, selectedPathIds } = state;
+      const { paths, pathIds, selectedPathIds, layers, activeLayer } = state;
+      const { pathIds: layerPathIds, ...layer } = layers[activeLayer];
       return {
         ...state,
         paths: {
-          ...state.paths,
-          [id]: payload,
+          ...paths,
+          [id]: {
+            layer: activeLayer,
+            ...payload,
+          },
         },
         pathIds: pathIds.concat(id),
         selectedPathIds: selected ? selectedPathIds.concat(id) : selectedPathIds,
+        layers: {
+          ...layers,
+          [activeLayer]: {
+            ...layer,
+            pathIds: layerPathIds.concat(id),
+          },
+        },
       };
     }
     case Actions.REMOVE_PATHS: {
       const { ids } = action.payload;
-      let { paths, pathIds, selectedPathIds } = state;
+      let { paths, pathIds, selectedPathIds, layers } = state;
       pathIds = pathIds.filter(pathId => !ids.includes(pathId));
       paths = pathIds.reduce((rest, id) => ({ ...rest, [id]: paths[id] }), {});
       selectedPathIds = selectedPathIds.filter(pathId => !ids.includes(pathId));
+      layers = state.layerIds.reduce((rest, id) => ({
+        ...rest, [id]: { ...layers[id], pathIds: pathIds.filter(pathId => !ids.includes(pathId)) },
+      }));
       return { ...state, paths, pathIds, selectedPathIds };
     }
     case Actions.UPDATE_PATHS: return updatePaths(state, action);
@@ -90,12 +104,33 @@ export default undoable((state = initialState, action) => {
       return { ...state, paths: update, selectedPathIds };
     }
     case Actions.DESELECT_ALL: return deselectAll(state);
+    case Actions.ADD_LAYER: {
+      const { layerIds, layers } = state;
+      const { id } = action.payload;
+      return {
+        ...state,
+        layers: {
+          ...layers,
+          [id]: action.payload,
+        },
+        layerIds: layerIds.concat(id),
+        activeLayer: id,
+      };
+    }
+    case Actions.REMOVE_LAYERS: {
+      const { ids } = action.payload;
+      let { layers, layerIds, activeLayer } = state;
+      layerIds = layerIds.filter(layerId => !ids.includes(layerId));
+      layers = layerIds.reduce((rest, id) => ({ ...rest, [id]: layers[id] }), {});
+      activeLayer = ids.includes(activeLayer) ? layerIds[layerIds.length - 1] : activeLayer;
+      return { ...state, layers, layerIds, activeLayer };
+    }
+    case Actions.SELECT_LAYER: return { ...state, activeLayer: action.payload.id };
     case Actions.SELECT_TOOL: return { ...state, activeTool: action.payload.tool };
-    default:
-      return state;
+    default: return state;
   }
 }, {
   undoType: GlobalActions.UNDO,
   redoType: GlobalActions.REDO,
-  filter: excludeAction(Actions.SELECT_TOOL),
+  filter: excludeAction([Actions.SELECT_LAYER, Actions.SELECT_TOOL]),
 });

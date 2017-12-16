@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
+import { Layer } from '@psychobolt/react-paperjs';
 import PieMenu from 'react-pie-menu';
 import { withStateHandlers, compose } from 'recompose';
 import { defaultMemoize } from 'reselect';
@@ -21,7 +22,8 @@ import {
   type ToolProps,
 } from './hoc';
 import Paper from './Paper';
-import { selectTool } from './Canvas.actions';
+import Toolbar from './Toolbar';
+import { addLayer, removeLayers, selectLayer, selectTool } from './Canvas.actions';
 import { type Canvas as CanvasProps } from './Canvas.state';
 import { getCanvas } from './Canvas.selectors';
 import styles from './Canvas.style';
@@ -123,15 +125,22 @@ class Canvas extends React.Component<Props, State> {
     this.props.setActiveTool(this.lastActiveTool);
   }
 
-  getPaths = defaultMemoize((pathIds, paths) => pathIds.map(pathId => {
-    const { id, type: Path, ...rest } = paths[pathId];
-    return <Path data={{ pathId: id }} key={`path_${id}`} {...rest} />;
+  getPaths = (pathIds, paths) => pathIds.map(pathId => {
+    const { id, type: Path, layer, ...rest } = paths[pathId];
+    return <Path key={`path_${id}`} data={{ pathId: id }} {...rest} />;
+  })
+
+  getLayers = defaultMemoize((layerIds, layers, paths) => layerIds.map(layerId => {
+    const { id, pathIds, ...rest } = layers[layerId];
+    return (<Layer key={`layer_${id}`} data={{ layerId: id }} {...rest}>{this.getPaths(pathIds, paths)}</Layer>);
   }))
 
   lastActiveTool: string;
 
   render() {
-    const { menuSlices, pathIds, paths, children, cursor } = this.props;
+    const {
+      menuSlices, paths, children, cursor, layerIds, layers, removeLayer, activeLayer,
+    } = this.props;
     const { mouseX, mouseY, menuX, menuY, enableMenu } = this.state;
     return (
       <div
@@ -140,6 +149,7 @@ class Canvas extends React.Component<Props, State> {
         onContextMenu={this.onContextMenu}
         onMouseUp={this.onMouseUp}
       >
+        {mouseX && mouseY && <div style={styles.statOverlay}><x-label>{` x=${mouseX}  y=${mouseY}`}</x-label></div>}
         <Paper
           onKeyUp={this.onKeyUp}
           onKeyDown={this.onKeyDown}
@@ -151,10 +161,16 @@ class Canvas extends React.Component<Props, State> {
           onPanDisabled={this.onPanDisabled}
           cursor={cursor}
         >
-          {this.getPaths(pathIds, paths)}
+          {this.getLayers(layerIds, layers, paths)}
           {children}
         </Paper>
-        {mouseX && mouseY && <div style={styles.statOverlay}><x-label>{` x=${mouseX}  y=${mouseY}`}</x-label></div>}
+        <Toolbar
+          addLayer={this.props.addLayer}
+          removeLayer={removeLayer}
+          selectLayer={this.props.selectLayer}
+          layerIds={layerIds}
+          activeLayer={activeLayer}
+        />
         {menuSlices.length && enableMenu && menuX && menuY &&
           <PieMenu centerX={menuX} centerY={menuY}>
             {menuSlices}
@@ -171,10 +187,15 @@ class Canvas extends React.Component<Props, State> {
 export default compose(
   connect(
     state => {
-      const { activeTool } = getCanvas(state.editor);
-      return { lastActiveTool: activeTool };
+      const { activeTool, ...rest } = getCanvas(state.editor);
+      return { lastActiveTool: activeTool, ...rest };
     },
-    dispatch => ({ storeToolHistory: tool => dispatch(selectTool(tool)) }),
+    defaultMemoize(dispatch => ({
+      addLayer: () => dispatch(addLayer()),
+      removeLayer: id => dispatch(removeLayers([id])),
+      selectLayer: id => dispatch(selectLayer(id)),
+      storeToolHistory: tool => dispatch(selectTool(tool)),
+    })),
   ),
   withStateHandlers(
     { activeTool: 'Select', cursor: 'auto' },
