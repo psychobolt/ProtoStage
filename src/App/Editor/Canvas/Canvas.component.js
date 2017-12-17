@@ -19,6 +19,7 @@ import {
   withRectangleTool,
   withCircleTool,
   withPolygonTool,
+  withSegmentTool,
   type ToolProps,
 } from './hoc';
 import Paper from './Paper';
@@ -212,6 +213,7 @@ export default compose(
   withMoveTool,
   withPencilTool,
   withLineTool,
+  withSegmentTool,
   withRectangleTool,
   withCircleTool,
   withPolygonTool,

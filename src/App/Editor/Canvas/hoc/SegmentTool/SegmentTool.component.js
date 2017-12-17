@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { LineTool } from '@psychobolt/react-paperjs';
+import { SegmentPathTool } from '@psychobolt/react-paperjs';
 
 import { addPath, deselectAll } from '../../Canvas.actions';
 import { getCanvas } from '../../Canvas.selectors';
 import { Tool } from '../shared/Tool';
+import styles from './SegmentTool.style';
 
 export default Container =>
   @connect(
@@ -15,9 +16,9 @@ export default Container =>
     }),
   )
   class extends Tool {
-    getIcon = () => <i className="icon icon-line-tool fa-2x" />
+    getIcon = () => <x-icon style={styles.icon} name="timeline" />
 
-    getTool = ref => <LineTool key={`${this.TOOL_NAME}Tool`} ref={ref} onPathAdd={this.onPathAdd} />
+    getTool = ref => <SegmentPathTool key={`${this.TOOL_NAME}Tool`} ref={ref} onPathAdd={this.onPathAdd} />
 
     onSelect() {
       super.onSelect();
@@ -27,12 +28,12 @@ export default Container =>
     onPathAdd = path => {
       path.remove();
       this.props.newPath({
-        type: this.TOOL_NAME,
+        type: 'Path',
         pathData: path.pathData,
         strokeColor: 'black',
       });
     }
 
-    TOOL_NAME = 'Line'
+    TOOL_NAME = 'Segment'
     Container = Container
   };

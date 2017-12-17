@@ -142,7 +142,7 @@
     "webpack-merge": "^4.1.1"
   },
   "dependencies": {
-    "@psychobolt/react-paperjs": "^0.0.38",
+    "@psychobolt/react-paperjs": "^0.0.39",
     "electron-redux": "^1.3.1",
     "element-resize-event": "^2.0.9",
     "font-awesome": "^4.7.0",
