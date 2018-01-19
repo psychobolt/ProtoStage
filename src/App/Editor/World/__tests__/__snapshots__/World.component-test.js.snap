@@ -1,29 +1,67 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`component <World /> should render correctly with Box by default 1`] = `
-<Switch>
+<div
+  role="presentation"
+  style={
+    Object {
+      "height": "100%",
+      "width": "100%",
+    }
+  }
+>
   <Route
-    component={[Function]}
     exact={true}
-    path="/editor"
-  />
-  <Route
-    path="/editor/scene3D"
+    path="/project/:id/:scene"
     render={[Function]}
   />
-</Switch>
+  <Switch>
+    <Route
+      component={[Function]}
+      exact={true}
+      path="/project/:id?"
+    />
+    <Route
+      path="/project/:id/scene2D"
+      render={[Function]}
+    />
+    <Route
+      path="/project/:id/scene3D"
+      render={[Function]}
+    />
+  </Switch>
+</div>
 `;
 
 exports[`component <World /> should render correctly with Sphere 1`] = `
-<Switch>
+<div
+  role="presentation"
+  style={
+    Object {
+      "height": "100%",
+      "width": "100%",
+    }
+  }
+>
   <Route
-    component={[Function]}
     exact={true}
-    path="/editor"
-  />
-  <Route
-    path="/editor/scene3D"
+    path="/project/:id/:scene"
     render={[Function]}
   />
-</Switch>
+  <Switch>
+    <Route
+      component={[Function]}
+      exact={true}
+      path="/project/:id?"
+    />
+    <Route
+      path="/project/:id/scene2D"
+      render={[Function]}
+    />
+    <Route
+      path="/project/:id/scene3D"
+      render={[Function]}
+    />
+  </Switch>
+</div>
 `;

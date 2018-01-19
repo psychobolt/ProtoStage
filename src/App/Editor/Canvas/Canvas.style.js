@@ -1,9 +1,10 @@
 export default {
   container: {
     width: '100%',
-    height: 'calc(100% - 60px)',
+    height: '100%',
   },
   statOverlay: {
     position: 'absolute',
+    bottom: 0,
   },
 };

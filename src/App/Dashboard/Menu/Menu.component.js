@@ -1,9 +1,15 @@
+// @flow
 import React from 'react';
+import { connect } from 'react-redux';
 
-import { RouteLink } from 'Framework/ReactRouterHelpers';
+import { newProject } from '../../Project/Project.actions';
 import styles from './Menu.styles';
 
-const Menu = () => (
+type Props = {
+  newProject: () => void
+};
+
+const Menu = (props: Props) => (
   <x-card style={styles.container}>
     <header>
       <strong>Pick A New App</strong>
@@ -21,11 +27,9 @@ const Menu = () => (
             <x-button skin="nav" style={styles.button}>
               <x-label>Top-down</x-label>
             </x-button>
-            <RouteLink to="/editor">
-              <x-button skin="nav" style={styles.button}>
-                <x-label>Custom</x-label>
-              </x-button>
-            </RouteLink>
+            <x-button onClick={props.newProject} skin="nav" style={styles.button}>
+              <x-label>Custom</x-label>
+            </x-button>
           </x-box>
         </x-buttons>
       </main>
@@ -48,4 +52,4 @@ const Menu = () => (
   </x-card>
 );
 
-export default Menu;
+export default connect(undefined, dispatch => ({ newProject: () => dispatch(newProject()) }))(Menu);

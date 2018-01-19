@@ -2,19 +2,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { RectangleTool } from '@psychobolt/react-paperjs';
 
+import { getCanvas } from 'App/App.selectors';
+
 import { selectPaths, deselectAll } from '../../Canvas.actions';
-import { getCanvas } from '../../Canvas.selectors';
 import { Tool } from '../shared/Tool';
 
 export default Container =>
   @connect(
     state => {
-      const { selectedPathIds } = getCanvas(state.editor);
+      const { selectedPathIds } = getCanvas(state);
       return { selectedPathIds };
     },
     dispatch => ({
       selectPaths: ids => dispatch(selectPaths(ids)),
-      deselectAll: () => dispatch(deselectAll()),
+      deselectAll: skipHistory => dispatch(deselectAll(skipHistory)),
     }),
   )
   class SelectTool extends Tool {
@@ -25,11 +26,14 @@ export default Container =>
     onPathAdd = path => {
       const { project, bounds } = path;
       path.remove();
-      const items = project.layers.reduce((collection, layer) =>
+      const { layers } = project;
+      const items = layers.slice(2, layers.length).reduce((collection, layer) =>
         collection.concat(layer.getItems({ overlapping: bounds })), [])
         .map(item => item.data.pathId);
-      if (items.length) this.props.selectPaths(items);
-      else if (this.props.selectedPathIds.length) this.props.deselectAll();
+      if (items.length) {
+        this.props.deselectAll(true);
+        this.props.selectPaths(items);
+      } else if (this.props.selectedPathIds.length) this.props.deselectAll();
     }
 
     TOOL_NAME = 'Select'

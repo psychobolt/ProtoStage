@@ -2,18 +2,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FreeformPathTool } from '@psychobolt/react-paperjs';
 
+import { getCanvas } from 'App/App.selectors';
+
 import { addPath, deselectAll } from '../../Canvas.actions';
-import { getCanvas } from '../../Canvas.selectors';
 import { Tool } from '../shared/Tool';
 
 export default Container =>
   @connect(
     state => {
-      const { selectedPathIds } = getCanvas(state.editor);
-      return { selectedPathIds };
+      const { selectedPathIds, activeLayer } = getCanvas(state);
+      return { selectedPathIds, activeLayer };
     },
     dispatch => ({
-      newPath: path => dispatch(addPath(path)),
+      newPath: (path, skipHistory) => dispatch(addPath(path, skipHistory)),
       deselectAll: () => dispatch(deselectAll()),
     }),
   )
@@ -33,6 +34,7 @@ export default Container =>
         type: 'Path',
         pathData: path.pathData,
         strokeColor: 'black',
+        layer: this.props.activeLayer,
       });
     }
 

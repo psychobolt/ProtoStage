@@ -2,23 +2,41 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Tool } from '@psychobolt/react-paperjs';
 
-import { updatePaths, selectPath, deselectAll } from '../../Canvas.actions';
-import { getCanvas } from '../../Canvas.selectors';
+import { getCanvas } from 'App/App.selectors';
+
+import { updatePaths, selectPaths, deselectAll } from '../../Canvas.actions';
+import * as Circle from '../CircleTool';
+import * as Line from '../LineTool';
+import * as Polygon from '../PolygonTool';
+import * as Rectangle from '../RectangleTool';
 import { Tool as ToolComponent } from '../shared/Tool';
 
 const MOUSE_LEFT_CODE = 0;
 const CURSOR_MOVE = 'move';
 
+function getProperties(type, path) {
+  switch (type) {
+    case Line.SHAPE: return Line.getProperties(path);
+    case Rectangle.SHAPE: return Rectangle.getProperties(path);
+    case Circle.SHAPE: return Circle.getProperties(path);
+    case 'Path': {
+      if (path.closed) return Polygon.getProperties(path);
+      return null;
+    }
+    default: return null;
+  }
+}
+
 export default Container =>
   @connect(
     state => {
-      const { selectedPathIds } = getCanvas(state.editor);
-      return { selectedPathIds };
+      const { selectedPathIds, paths } = getCanvas(state);
+      return { selectedPathIds, paths };
     },
     dispatch => ({
       updatePaths: paths => dispatch(updatePaths(paths)),
-      selectPath: ids => dispatch(selectPath(ids)),
-      deselectAll: () => dispatch(deselectAll()),
+      selectPath: id => dispatch(selectPaths([id])),
+      deselectAll: skipHistory => dispatch(deselectAll(skipHistory)),
     }),
   )
   class MoveTool extends ToolComponent {
@@ -44,6 +62,7 @@ export default Container =>
           const { pathId } = item.data;
           if (!this.selected && typeof pathId !== 'undefined') {
             if (!selectedPathIds.includes(pathId)) {
+              this.props.deselectAll(true);
               this.props.selectPath(pathId);
               this.items = [item];
             } else {
@@ -71,10 +90,16 @@ export default Container =>
       const { selected, items } = this;
       if (items.length) {
         if (!selected.position.equals(this.start)) {
-          this.props.updatePaths(items.map(item => ({
-            id: item.data.pathId,
-            pathData: item.pathData,
-          })));
+          const { paths } = this.props;
+          this.props.updatePaths(items.map(item => {
+            const { pathId } = item.data;
+            const path = paths[pathId];
+            return {
+              id: pathId,
+              pathData: item.pathData,
+              properties: getProperties(path.type, item),
+            };
+          }));
         }
         this.items = [];
         this.selected = null;

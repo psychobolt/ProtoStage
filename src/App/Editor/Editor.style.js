@@ -1,5 +1,6 @@
 const divider = {
-  width: '5px',
+  borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+  margin: '0 2px',
   cursor: 'ew-resize',
 };
 
@@ -10,7 +11,7 @@ export default {
   },
   divider,
   panel: {
-    width: `calc(50% - ${parseInt(divider.width, 10) / 2}px`,
+    width: 'calc(50% - 2.5px)',
     height: '100%',
     overflow: 'hidden',
   },

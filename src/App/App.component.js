@@ -8,6 +8,6 @@ import styles from './App.style';
 export default () => (
   <div style={styles.container}>
     <Route exact path="/" component={Dashboard} />
-    <Route path="/editor" component={Editor} />
+    <Route path="/project/:id?" component={Editor} />
   </div>
 );

@@ -1,11 +1,18 @@
+// @flow
 import React from 'react';
+import { connect, type Connector } from 'react-redux';
 
+import { getProject } from 'App/App.selectors';
 import { XButton } from 'Framework/ReactXelToolkit';
 import { RouteLink } from 'Framework/ReactRouterHelpers';
 
 import styles from './Wizard.style';
 
-export default () => (
+type Props = {
+  projectId: string,
+}
+
+const Wizard = ({ projectId }: Props) => (
   <div style={styles.container}>
     <div style={styles.overlay} />
     <x-card style={styles.card}>
@@ -15,12 +22,12 @@ export default () => (
       <main>
         <x-box>
           <x-box>
-            <RouteLink to="/editor/scene2d" selectedProp="toggled">
+            <RouteLink to={`/project/${projectId}/scene2d`} selectedProp="toggled">
               <XButton>2D Scene</XButton>
             </RouteLink>
           </x-box>
           <x-box>
-            <RouteLink to="/editor/scene3d" selectedProp="toggled">
+            <RouteLink to={`project/${projectId}/scene3d`} selectedProp="toggled">
               <XButton>3D Scene</XButton>
             </RouteLink>
           </x-box>
@@ -29,3 +36,8 @@ export default () => (
     </x-card>
   </div>
 );
+
+const connector: Connector<Props, {}> = connect(state =>
+  ({ projectId: getProject(state).id }), () => ({}));
+
+export default connector(Wizard);

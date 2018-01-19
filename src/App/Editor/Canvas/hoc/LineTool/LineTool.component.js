@@ -2,15 +2,30 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { LineTool } from '@psychobolt/react-paperjs';
 
+import { getCanvas } from 'App/App.selectors';
+
 import { addPath, deselectAll } from '../../Canvas.actions';
-import { getCanvas } from '../../Canvas.selectors';
 import { Tool } from '../shared/Tool';
+
+export const SHAPE = 'Line';
+
+export function getProperties(path) {
+  const { point: from } = path.firstSegment;
+  const { point: to } = path.lastSegment;
+  return {
+    from: { x: from.x, y: from.y },
+    to: { x: to.x, y: to.y },
+  };
+}
 
 export default Container =>
   @connect(
-    state => ({ selectedPathIds: getCanvas(state.editor).selectedPathIds }),
+    state => {
+      const { selectedPathIds, activeLayer } = getCanvas(state);
+      return { selectedPathIds, activeLayer };
+    },
     dispatch => ({
-      newPath: path => dispatch(addPath(path)),
+      newPath: (path, skipHistory) => dispatch(addPath(path, skipHistory)),
       deselectAll: () => dispatch(deselectAll()),
     }),
   )
@@ -27,12 +42,14 @@ export default Container =>
     onPathAdd = path => {
       path.remove();
       this.props.newPath({
-        type: this.TOOL_NAME,
+        type: SHAPE,
         pathData: path.pathData,
         strokeColor: 'black',
+        layer: this.props.activeLayer,
+        properties: getProperties(path),
       });
     }
 
-    TOOL_NAME = 'Line'
+    TOOL_NAME = SHAPE
     Container = Container
   };

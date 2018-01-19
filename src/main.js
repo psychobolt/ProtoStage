@@ -1,16 +1,15 @@
 import { app, BrowserWindow, Menu } from 'electron';
 import { forwardToRenderer, replayActionMain } from 'electron-redux';
 import windowStateKeeper from 'electron-window-state';
-import { combineReducers } from 'redux';
 import path from 'path';
 import url from 'url';
 
-import initialState from './App/App.state';
-import reducers from './App/App.reducers';
-import configureStore from './shared/store';
+import reducer from './reducer';
+import { getProject } from './App/App.selectors';
+import { configureStore } from './shared/store';
 import menu from './menu';
 
-const store = configureStore(combineReducers(reducers), initialState, [forwardToRenderer]);
+const store = configureStore(reducer, undefined, [forwardToRenderer]);
 
 replayActionMain(store);
 
@@ -22,6 +21,10 @@ async function installExtension() {
   const { default: install, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = require('electron-devtools-installer'); // eslint-disable-line global-require
   const extensions = [REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS];
   return Promise.all(extensions.map(extension => install(extension)));
+}
+
+function renderMenu() {
+  Menu.setApplicationMenu(menu(win, store));
 }
 
 async function createWindow() {
@@ -66,7 +69,16 @@ async function createWindow() {
     win = null;
   });
 
-  Menu.setApplicationMenu(menu(win, store));
+  renderMenu();
+
+  let prevState = store.getState();
+  store.subscribe(() => {
+    const state = store.getState();
+    if (getProject(prevState).id !== getProject(state).id) {
+      renderMenu();
+    }
+    prevState = state;
+  });
 }
 
 // This method will be called when Electron has finished

@@ -2,25 +2,35 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { PolygonTool } from '@psychobolt/react-paperjs';
 
-import { addPath, removePaths, updatePaths, deselectAll } from '../../Canvas.actions';
-import { getCanvas } from '../../Canvas.selectors';
+import { getCanvas } from 'App/App.selectors';
+
+import { addPath, removePaths, updatePaths, selectPaths, deselectAll } from '../../Canvas.actions';
 import { Tool } from '../shared/Tool';
+
+export function getProperties(path) {
+  const { x, y } = path.position;
+  return {
+    position: { x, y },
+    points: path.segments.map(segment => ({ x: segment.point.x, y: segment.point.y })),
+  };
+}
 
 export default Container =>
   @connect(
     state => {
-      const { paths, selectedPathIds, activeTool } = getCanvas(state.editor);
-      return { paths, selectedPathIds, lastActiveTool: activeTool };
+      const { paths, selectedPathIds, activeTool, activeLayer } = getCanvas(state);
+      return { paths, selectedPathIds, lastActiveTool: activeTool, activeLayer };
     },
     dispatch => ({
-      newPath: path => {
-        const newPath = addPath(path);
+      newPath: (path, skipHistory) => {
+        const newPath = addPath(path, skipHistory);
         dispatch(newPath);
         return newPath.payload.id;
       },
       removePaths: id => dispatch(removePaths(id)),
       updatePath: path => dispatch(updatePaths([path])),
-      deselectAll: () => dispatch(deselectAll()),
+      selectPath: id => dispatch(selectPaths([id])),
+      deselectAll: skipHistory => dispatch(deselectAll(skipHistory)),
     }),
   )
   class extends Tool {
@@ -61,9 +71,10 @@ export default Container =>
         pathId = this.props.newPath({
           type: 'Path',
           pathData,
-          selected: true,
           visible: false,
+          layer: this.props.activeLayer,
         });
+        this.props.selectPath(pathId, true);
         this.history.push(pathId);
         this.setState({ pathId, pathData });
       } else {
@@ -76,16 +87,19 @@ export default Container =>
     }
 
     onPathAdd = path => {
+      path.remove();
       this.props.updatePath({
         type: 'Path',
         id: this.state.pathId,
         pathData: path.pathData,
+        layer: this.props.activeLayer,
         strokeColor: 'black',
         fillColor: 'white',
-        selected: false,
         visible: true,
         closed: true,
+        properties: getProperties(path),
       });
+      this.props.deselectAll(true);
       this.setState({ pathId: null, pathData: '' });
       this.path = null;
     }

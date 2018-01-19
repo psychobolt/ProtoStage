@@ -6,10 +6,12 @@ import { AppContainer } from 'react-hot-loader';
 import { forwardToMain, replayActionRenderer } from 'electron-redux';
 import { createHashHistory } from 'history';
 
-import { initialState } from './App/index';
+import saga from './sagas';
 import reducer from './reducer';
-import configureStore from './shared/store';
+import { configureStore } from './shared/store';
 import Routes from './routes';
+
+const createSaga = history => function* rootSaga() { yield saga(history); };
 
 let props;
 if (module.hot && module.hot.data) {
@@ -20,10 +22,10 @@ if (module.hot && module.hot.data) {
 } else {
   const history = createHashHistory();
   props = {
-    store: configureStore(reducer, initialState, [
+    store: configureStore(reducer, undefined, [
       forwardToMain,
       routerMiddleware(history),
-    ]),
+    ], createSaga(history)),
     history,
   };
 }

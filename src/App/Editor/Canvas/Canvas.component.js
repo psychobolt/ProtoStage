@@ -7,6 +7,8 @@ import { withStateHandlers, compose } from 'recompose';
 import { defaultMemoize } from 'reselect';
 import typeof { MouseEvent, KeyEvent } from 'paper';
 
+import { getCanvas } from 'App/App.selectors';
+
 import './assets/fontello/css/icon.css';
 import './assets/fontello/css/fontello.css';
 import {
@@ -24,10 +26,36 @@ import {
 } from './hoc';
 import Paper from './Paper';
 import Toolbar from './Toolbar';
-import { addLayer, removeLayers, selectLayer, selectTool } from './Canvas.actions';
-import { type Canvas as CanvasProps } from './Canvas.state';
-import { getCanvas } from './Canvas.selectors';
+import * as ActionCreators from './Canvas.actions';
 import styles from './Canvas.style';
+
+export type PathProps = {
+  id: number,
+  type: string,
+  pathData: string,
+  layer: number,
+  properties: {},
+};
+
+type LayerProps = {
+  id: number,
+  pathIds: number[]
+};
+
+export type CanvasProps = {
+  paths: {
+    [number]: PathProps
+  },
+  pathIds: number[],
+  selectedPathIds: number[],
+  layers: {
+    [number]: LayerProps,
+  },
+  layerIds: number[],
+  activeLayer: number,
+  activeTool: string,
+  zoomLevel: number,
+};
 
 type Props = CanvasProps & ToolProps;
 
@@ -127,7 +155,7 @@ class Canvas extends React.Component<Props, State> {
   }
 
   getPaths = (pathIds, paths) => pathIds.map(pathId => {
-    const { id, type: Path, layer, ...rest } = paths[pathId];
+    const { id, type: Path, layer, properties, ...rest } = paths[pathId];
     return <Path key={`path_${id}`} data={{ pathId: id }} {...rest} />;
   })
 
@@ -140,7 +168,17 @@ class Canvas extends React.Component<Props, State> {
 
   render() {
     const {
-      menuSlices, paths, children, cursor, layerIds, layers, removeLayer, activeLayer,
+      menuSlices,
+      paths,
+      children,
+      cursor,
+      layerIds,
+      layers,
+      removeLayer,
+      activeLayer,
+      zoomLevel,
+      gridSpacing,
+      autoSync,
     } = this.props;
     const { mouseX, mouseY, menuX, menuY, enableMenu } = this.state;
     return (
@@ -150,8 +188,20 @@ class Canvas extends React.Component<Props, State> {
         onContextMenu={this.onContextMenu}
         onMouseUp={this.onMouseUp}
       >
-        {mouseX && mouseY && <div style={styles.statOverlay}><x-label>{` x=${mouseX}  y=${mouseY}`}</x-label></div>}
+        <Toolbar
+          addLayer={this.props.addLayer}
+          removeLayer={removeLayer}
+          selectLayer={this.props.selectLayer}
+          layerIds={layerIds}
+          activeLayer={activeLayer}
+          gridSpacing={gridSpacing}
+          setGridSpacing={this.props.setGridSpacing}
+          autoSync={autoSync}
+          toggleAutoSync={this.props.toggleAutoSync}
+        />
         <Paper
+          viewZoom={zoomLevel}
+          onZoom={this.props.zoom}
           onKeyUp={this.onKeyUp}
           onKeyDown={this.onKeyDown}
           onMouseDown={this.onMouseDown}
@@ -160,18 +210,13 @@ class Canvas extends React.Component<Props, State> {
           onMouseMove={this.onMouseMove}
           onPanEnabled={this.onPanEnabled}
           onPanDisabled={this.onPanDisabled}
+          gridSpacing={gridSpacing}
           cursor={cursor}
         >
           {this.getLayers(layerIds, layers, paths)}
           {children}
         </Paper>
-        <Toolbar
-          addLayer={this.props.addLayer}
-          removeLayer={removeLayer}
-          selectLayer={this.props.selectLayer}
-          layerIds={layerIds}
-          activeLayer={activeLayer}
-        />
+        {mouseX && mouseY && <div style={styles.statOverlay}><x-label>{` x=${mouseX}  y=${mouseY}`}</x-label></div>}
         {menuSlices.length && enableMenu && menuX && menuY &&
           <PieMenu centerX={menuX} centerY={menuY}>
             {menuSlices}
@@ -188,14 +233,17 @@ class Canvas extends React.Component<Props, State> {
 export default compose(
   connect(
     state => {
-      const { activeTool, ...rest } = getCanvas(state.editor);
+      const { activeTool, ...rest } = getCanvas(state);
       return { lastActiveTool: activeTool, ...rest };
     },
     defaultMemoize(dispatch => ({
-      addLayer: () => dispatch(addLayer()),
-      removeLayer: id => dispatch(removeLayers([id])),
-      selectLayer: id => dispatch(selectLayer(id)),
-      storeToolHistory: tool => dispatch(selectTool(tool)),
+      addLayer: () => dispatch(ActionCreators.addLayer()),
+      removeLayer: id => dispatch(ActionCreators.removeLayers([id])),
+      selectLayer: id => dispatch(ActionCreators.selectLayer(id)),
+      storeToolHistory: tool => dispatch(ActionCreators.selectTool(tool)),
+      setGridSpacing: value => dispatch(ActionCreators.setGridSpacing(value)),
+      toggleAutoSync: () => dispatch(ActionCreators.toggleAutoSync()),
+      zoom: level => dispatch(ActionCreators.zoom(level)),
     })),
   ),
   withStateHandlers(
