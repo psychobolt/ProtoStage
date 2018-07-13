@@ -1,29 +1,32 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import XInput, { EVENT_KEYUP } from '../XInput.container';
+import { XInput, EVENT_KEYUP } from '../XInput.container';
 
 class XInputMock extends XInput {
   constructor(props) {
     super(props);
-    this.el = document.createElement('div');
+    this.ref = { current: document.createElement('div') };
     const input = document.createElement('input');
-    this.el.appendChild(input);
-    this.el['#input'] = input;
+    this.ref.current.appendChild(input);
+    this.ref.current['#input'] = input;
   }
 
   render() {
-    return <div>XInput mocked</div>;
+    return (
+      <div>
+        {'XInput mocked'}
+      </div>
+    );
   }
 }
 
 describe('components <XInput>', () => {
-  it('should render correctly -- with fallback', () => {
+  it('should render without crashing -- with fallback', () => {
     const props = {
       onKeyup: jest.fn(),
     };
-    const wrapper = shallow(<XInput {...props} />);
-    expect(wrapper).toMatchSnapshot();
+    shallow(<XInput {...props} />);
   });
 
   it('should trigger on keyup event -- with fallback', () => {
@@ -33,7 +36,9 @@ describe('components <XInput>', () => {
     };
     const wrapper = mount(<XInput {...props} />);
     wrapper.find('input').simulate('keyup');
-    expect(props.onKeyup.mock.calls.length).toBe(1);
+    const { onKeyup } = props;
+    expect(onKeyup.mock.calls.length).toBe(1);
+    wrapper.unmount();
   });
 
   it('should trigger on keyup event -- without fallback', () => {
@@ -45,7 +50,8 @@ describe('components <XInput>', () => {
     const keyup = new KeyboardEvent(EVENT_KEYUP);
     const instance = wrapper.instance();
     instance.input.dispatchEvent(keyup);
-    expect(props.onKeyup.mock.calls.length).toBe(1);
+    const { onKeyup } = props;
+    expect(onKeyup.mock.calls.length).toBe(1);
   });
 
   it('should update input on state change -- without fallback', () => {
@@ -72,6 +78,7 @@ describe('components <XInput>', () => {
     const instance = wrapper.instance();
     wrapper.unmount();
     instance.input.dispatchEvent(keyup);
-    expect(props.onKeyup.mock.calls.length).toBe(0);
+    const { onKeyup } = props;
+    expect(onKeyup.mock.calls.length).toBe(0);
   });
 });

@@ -1,46 +1,34 @@
 import 'globals';
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { routerMiddleware } from 'react-router-redux';
-import { AppContainer } from 'react-hot-loader';
 import { forwardToMain, replayActionRenderer } from 'electron-redux';
 import { createHashHistory } from 'history';
 
-import saga from './sagas';
+import { initialState } from './App';
 import reducer from './reducer';
 import { configureStore } from './shared/store';
 import Routes from './routes';
 
 const createSaga = history => function* rootSaga() { yield saga(history); };
+const history = createHashHistory();
+const store = configureStore(reducer, initialState, [
+  forwardToMain,
+  routerMiddleware(history),
+], createSaga(history)));
 
-let props;
-if (module.hot && module.hot.data) {
-  props = {
-    store: module.hot.data.store,
-    history: module.hot.data.history,
-  };
-} else {
-  const history = createHashHistory();
-  props = {
-    store: configureStore(reducer, undefined, [
-      forwardToMain,
-      routerMiddleware(history),
-    ], createSaga(history)),
-    history,
-  };
-}
+replayActionRenderer(store);
 
-replayActionRenderer(props.store);
-
-render(
-  <AppContainer><Routes {...props} /></AppContainer>,
+ReactDOM.render(
+  <Provider store={store}>
+    <Routes history={history} />
+  </Provider>,
   document.getElementById('root'),
 );
 
 if (module.hot) {
-  module.hot.accept();
-  module.hot.dispose(data => {
-    props.store.replaceReducer(reducer);
-    Object.assign(data, props);
+  module.hot.accept('./reducer', () => {
+    store.replaceReducer(require('./reducer').default); // eslint-disable-line global-require
   });
 }

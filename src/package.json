@@ -1,5 +1,6 @@
 {
   "name": "proto-stage-app",
+  "productName": "ProtoStage",
   "version": "0.0.1",
   "main": ".build/main.bundle.js",
   "repository": "https://github.com/psychobolt/react-electron-boilerplate",

@@ -16,27 +16,35 @@ type Props = {
 
 // @flow
 class ResizeListenerTest extends React.Component<Props> {
+  resized = 0;
+
   componentWillMount() {
-    this.props.registerResizeListener();
+    const { registerResizeListener } = this.props;
+    registerResizeListener();
   }
 
   componentWillUpdate() {
     this.resized += 1;
   }
 
-  resized = 0;
-
   render() {
-    return <div>test</div>;
+    return (
+      <div>
+        {'test'}
+      </div>
+    );
   }
 }
 
 describe('component <ResizableContainer>', () => {
-  it('should render correctly', () => {
-    const Test = () => <div>test</div>;
+  it('should render without crashing', () => {
+    const Test = () => (
+      <div>
+        {'test'}
+      </div>
+    );
     const Component = withResizableContainer(Test);
-    const wrapper = shallow(<Component />);
-    expect(wrapper).toMatchSnapshot();
+    shallow(<Component />);
   });
 
   it('should register listener on mount', () => {
@@ -48,7 +56,7 @@ describe('component <ResizableContainer>', () => {
   it('should calculate new dimensions on resize', () => {
     const Component = withResizableContainer(ResizeListenerTest);
     const wrapper = mount(<Component />);
-    wrapper.instance().onResize();
+    wrapper.childAt(0).instance().onResize();
     expect(wrapper.find(ResizeListenerTest).instance().resized).toBe(1);
   });
 });

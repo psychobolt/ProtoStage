@@ -1,4 +1,4 @@
-import { Menu, dialog } from 'electron';
+import { app, Menu, dialog } from 'electron';
 import { push } from 'react-router-redux';
 import fs from 'fs';
 
@@ -220,16 +220,32 @@ export default (win, store) => {
     ],
   });
 
-  const { id: projectId } = getProject(state);
-
-  const menu = Menu.buildFromTemplate([
+  const template = [
     fileMenu(),
     ...(projectId ? [editMenu()] : []),
     ...(projectId ? [canvasMenu()] : []),
     ...(projectId ? [sceneMenu()] : []),
     viewMenu(),
     ...(process.env.NODE_ENV === 'development' ? [goMenu()] : []),
-  ]);
+    { role: 'windowMenu' },
+  ];
+
+  if (process.platform === 'darwin') {
+    template.unshift({
+      label: app.getName(),
+      submenu: [
+        { role: 'about' },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideothers' },
+        { role: 'unhide' },
+        { type: 'separator' },
+        { role: 'quit' },
+      ],
+    });
+  }
+
+  const menu = Menu.buildFromTemplate(template);
 
   if (projectId) {
     const [
