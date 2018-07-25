@@ -11,7 +11,7 @@ type Props = {
 export const XTab = ({ active, onClick, children }: Props) => (
   <x-tab
     onClick={onClick}
-    selected={active || null}
+    toggled={active || null}
   >
     <x-label>
       {children}

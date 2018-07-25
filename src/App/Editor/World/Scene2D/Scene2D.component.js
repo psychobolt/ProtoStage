@@ -74,14 +74,16 @@ type Props = {
 
 export default class Scene2D extends React.Component<Props> {
   componentDidMount() {
-    this.props.registerResizeListener();
+    const { registerResizeListener } = this.props;
+    registerResizeListener();
   }
 
-  componentDidUpdate({ id }: Props) {
-    if (this.props.id === id) {
-      const paused = this.isPaused();
-      if (this.props.paused !== paused) {
-        if (this.props.paused) {
+  componentDidUpdate({ id: oldId }: Props) {
+    const { id, paused } = this.props;
+    if (id === oldId) {
+      const isPaused = this.isPaused();
+      if (paused !== isPaused) {
+        if (paused) {
           this.pause();
         } else {
           this.resume();
@@ -91,7 +93,8 @@ export default class Scene2D extends React.Component<Props> {
   }
 
   onStep = (testbed: any) => () => {
-    if (this.props.tracking) {
+    const { tracking } = this.props;
+    if (tracking) {
       if (this.activeBody) {
         const position = this.activeBody.getPosition();
         let { x, y } = testbed;
@@ -114,68 +117,71 @@ export default class Scene2D extends React.Component<Props> {
     activeFixture,
     paths,
     pixelsPerMeter,
-  ) =>
-    ids.map(id => {
-      const { type, fixtureIds, linearVelocity, ...body } = bodies[id];
-      return (
-        <Body
-          id={id}
-          key={id}
-          type={type}
-          {...body}
-          linearVelocity={new Vec2(linearVelocity.x, linearVelocity.y)}
-          ref={id === activeBody ? this.setActiveBody : null}
-        >
-          {fixtureIds.map(fixtureId => {
-            const { pathId, bodyId, ...fixture } = fixtures[fixtureId];
-            const { type: shape, closed, properties } = paths[pathId] || {};
-            let render = {};
-            if (fixtureId === activeFixture) {
-              render = ACTIVE_FIXTURE_STYLE;
-            } else if (bodyId === activeBody) {
-              render = ACTIVE_BODY_STYLE;
-            } else {
-              render = INACTIVE_BODY_STYLE;
-            }
-            return properties && (
-              <Fixture {...fixture} key={fixtureId} render={render}>
-                {shape === LINE_SHAPE &&
-                  <Edge
-                    v1={new Vec2(
-                      properties.from.x / pixelsPerMeter,
-                      -properties.from.y / pixelsPerMeter,
-                    )}
-                    v2={
-                      new Vec2(properties.to.x / pixelsPerMeter, -properties.to.y / pixelsPerMeter)
-                    }
-                  />}
-                {shape === CIRCLE_SHAPE &&
-                  <Circle
-                    center={new Vec2(
-                      properties.position.x / pixelsPerMeter,
-                      -properties.position.y / pixelsPerMeter,
-                    )}
-                    radius={properties.radius / pixelsPerMeter}
-                  />}
-                {shape === RECT_SHAPE &&
-                  <Box
-                    center={new Vec2(
-                      properties.position.x / pixelsPerMeter,
-                      -properties.position.y / pixelsPerMeter,
-                    )}
-                    hx={properties.width / 2 / pixelsPerMeter}
-                    hy={properties.height / 2 / pixelsPerMeter}
-                  />}
-                {shape === 'Path' && closed &&
-                  <Polygon vertices={properties.points.map(point =>
-                      new Vec2(point.x / pixelsPerMeter, -point.y / pixelsPerMeter))}
-                  />}
-              </Fixture>
-            );
-          })}
-        </Body>
-      );
-    }))
+  ) => ids.map(id => {
+    const { type, fixtureIds, linearVelocity, ...body } = bodies[id];
+    return (
+      <Body
+        id={id}
+        key={id}
+        type={type}
+        {...body}
+        linearVelocity={new Vec2(linearVelocity.x, linearVelocity.y)}
+        ref={id === activeBody ? this.setActiveBody : null}
+      >
+        {fixtureIds.map(fixtureId => {
+          const { pathId, bodyId, ...fixture } = fixtures[fixtureId];
+          const { type: shape, closed, properties } = paths[pathId] || {};
+          let render = {};
+          if (fixtureId === activeFixture) {
+            render = ACTIVE_FIXTURE_STYLE;
+          } else if (bodyId === activeBody) {
+            render = ACTIVE_BODY_STYLE;
+          } else {
+            render = INACTIVE_BODY_STYLE;
+          }
+          return properties && (
+            <Fixture {...fixture} key={fixtureId} render={render}>
+              {shape === LINE_SHAPE && (
+                <Edge
+                  v1={new Vec2(
+                    properties.from.x / pixelsPerMeter,
+                    -properties.from.y / pixelsPerMeter,
+                  )}
+                  v2={
+                    new Vec2(properties.to.x / pixelsPerMeter, -properties.to.y / pixelsPerMeter)
+                  }
+                />
+              )}
+              {shape === CIRCLE_SHAPE && (
+                <Circle
+                  center={new Vec2(
+                    properties.position.x / pixelsPerMeter,
+                    -properties.position.y / pixelsPerMeter,
+                  )}
+                  radius={properties.radius / pixelsPerMeter}
+                />
+              )}
+              {shape === RECT_SHAPE && (
+                <Box
+                  center={new Vec2(
+                    properties.position.x / pixelsPerMeter,
+                    -properties.position.y / pixelsPerMeter,
+                  )}
+                  hx={properties.width / 2 / pixelsPerMeter}
+                  hy={properties.height / 2 / pixelsPerMeter}
+                />
+              )}
+              {shape === 'Path' && closed && (
+                <Polygon vertices={properties.points
+                  .map(point => new Vec2(point.x / pixelsPerMeter, -point.y / pixelsPerMeter))}
+                />
+              )}
+            </Fixture>
+          );
+        })}
+      </Body>
+    );
+  }))
 
   getJoints = defaultMemoize((ids, joints) => ids.map(id => {
     let { axis, anchors, ...joint } = joints[id];
@@ -201,8 +207,11 @@ export default class Scene2D extends React.Component<Props> {
   })
 
   activeBody: PlBody
+
   pause: () => void
+
   resume: () => void
+
   isPaused: () => boolean
 
   render() {

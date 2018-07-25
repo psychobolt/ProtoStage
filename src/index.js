@@ -6,17 +6,17 @@ import { routerMiddleware } from 'react-router-redux';
 import { forwardToMain, replayActionRenderer } from 'electron-redux';
 import { createHashHistory } from 'history';
 
-import { initialState } from './App';
+import saga from './sagas';
 import reducer from './reducer';
 import { configureStore } from './shared/store';
 import Routes from './routes';
 
 const createSaga = history => function* rootSaga() { yield saga(history); };
 const history = createHashHistory();
-const store = configureStore(reducer, initialState, [
+const store = configureStore(reducer, undefined, [
   forwardToMain,
   routerMiddleware(history),
-], createSaga(history)));
+], createSaga(history));
 
 replayActionRenderer(store);
 

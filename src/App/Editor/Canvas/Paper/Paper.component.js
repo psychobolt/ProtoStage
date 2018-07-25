@@ -1,11 +1,11 @@
 // @flow
 import React, { type Node } from 'react';
-import { withPanAndZoom, renderWithPaperScope, PaperContainer, Grid } from '@psychobolt/react-paperjs';
+import styled from 'styled-components';
+import { renderWithPaperScope, PaperContainer } from '@psychobolt/react-paperjs';
+import { PanAndZoom, Grid } from '@psychobolt/react-paperjs-editor';
 import typeof { Event } from 'paper';
 
-import styles from './Paper.style';
-
-const Container = withPanAndZoom(PaperContainer);
+import * as styles from './Paper.style';
 
 export type EventHandler = (event: Object) => any;
 
@@ -28,22 +28,26 @@ type Props = {
 
 const noop = () => {};
 
-const eventHandler = (handlers = []) => (event: Event) =>
-  handlers.forEach((handler: EventHandler) => (handler ? handler(event) : noop()));
+const eventHandler = (handlers = []) => (event: Event) => handlers
+  .forEach((handler: EventHandler) => (handler ? handler(event) : noop()));
+
+const Container = styled(PaperContainer)`
+  ${styles.container}
+`;
 
 export default class Paper extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    this.container = React.createRef();
+  }
+
   onResize = () => {
     this.forceUpdate();
   }
 
-  onFocus = () => {
-    const { container } = this.container;
-    container.canvas.focus();
-  }
+  onFocus = () => this.container.current.canvas.current.focus()
 
-  setContainer = (ref: typeof Container) => { this.container = ref; }
-
-  container: typeof Container;
+  container: typeof PaperContainer;
 
   render() {
     const {
@@ -64,17 +68,14 @@ export default class Paper extends React.Component<Props> {
     } = this.props;
     return (
       <Container
-        ref={this.setContainer}
+        innerRef={this.container}
         canvasProps={{
           resize: 'true',
           style: {
-            ...styles.canvas,
             cursor,
           },
           tabIndex: 0,
         }}
-        viewZoom={viewZoom}
-        viewCenter={[0, 0]}
         viewProps={{
           onKeyUp: eventHandler([onKeyUp]),
           onKeyDown: eventHandler([onKeyDown]),
@@ -85,32 +86,31 @@ export default class Paper extends React.Component<Props> {
           onMouseMove: eventHandler([onMouseMove]),
           onResize: this.onResize,
         }}
-        prepanStyle={{
-          cursor: '-webkit-grab',
-        }}
-        panStyle={{
-          cursor: '-webkit-grabbing',
-        }}
-        onPanEnabled={onPanEnabled}
-        onPanDisabled={onPanDisabled}
-        onZoom={onZoom}
       >
-        {renderWithPaperScope(paper => {
-          const { top, left, right, bottom } = paper.view.bounds;
-          return (
-            <Grid
-              width="100%"
-              height="100%"
-              top={top}
-              left={left}
-              right={right}
-              bottom={bottom}
-              strokeWidth={1 / paper.view.zoom}
-              cellSize={gridSpacing}
-            />
-          );
-        })}
-        {children}
+        <PanAndZoom
+          onPanEnabled={onPanEnabled}
+          onPanDisabled={onPanDisabled}
+          onZoom={onZoom}
+          zoomLevel={viewZoom}
+          center={[0, 0]}
+        >
+          {renderWithPaperScope(paper => {
+            const { top, left, right, bottom } = paper.view.bounds;
+            return (
+              <Grid
+                width="100%"
+                height="100%"
+                top={top}
+                left={left}
+                right={right}
+                bottom={bottom}
+                strokeWidth={1 / paper.view.zoom}
+                cellSize={gridSpacing}
+              />
+            );
+          })}
+          {children}
+        </PanAndZoom>
       </Container>
     );
   }

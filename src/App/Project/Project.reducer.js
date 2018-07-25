@@ -33,9 +33,8 @@ const reducer = (state = {}, action) => {
   }
 };
 
-export default ({ history = historyInitialState, settings, ...rest } = {}, action) =>
-  reducer({
-    ...rest,
-    history: historyReducer(history, action),
-    settings: settingsReducer(settings, action),
-  }, action);
+export default ({ history = historyInitialState, settings, ...rest } = {}, action) => reducer({
+  ...rest,
+  history: historyReducer(history, action),
+  settings: settingsReducer(settings, action),
+}, action);

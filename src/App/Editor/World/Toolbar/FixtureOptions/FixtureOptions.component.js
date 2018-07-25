@@ -18,8 +18,8 @@ export type Props = {
 export default class FixtureOptions extends React.Component<Props> {
   componentWillReceiveProps({ activeFixture, body, setActiveFixture }: Props) {
     const { fixtureIds } = body;
-    if (fixtureIds.length &&
-      (!activeFixture || !fixtureIds.includes(activeFixture))) {
+    if (fixtureIds.length
+      && (!activeFixture || !fixtureIds.includes(activeFixture))) {
       setActiveFixture(fixtureIds[0]);
     }
   }
@@ -29,18 +29,33 @@ export default class FixtureOptions extends React.Component<Props> {
     return true;
   }
 
-  getMenu = defaultMemoize((ids, activeFixture) => ids.map((id, index) => <x-menuitem key={`fixture_${id}`} value={id} selected={activeFixture === id}><x-label>Fixture {index + 1}</x-label></x-menuitem>))
+  getMenu = defaultMemoize((ids, activeFixture) => ids.map((id, index) => (
+    <x-menuitem key={`fixture_${id}`} value={id} toggled={activeFixture === id}>
+      <x-label>
+        {`Fixture ${index + 1}`}
+      </x-label>
+    </x-menuitem>
+  )))
 
-  setDensity = (event: CustomEvent, value: number) =>
-    this.props.updateFixture({ id: this.props.activeFixture, density: value });
+  setDensity = (event: CustomEvent, value: number) => {
+    const { activeFixture, updateFixture } = this.props;
+    updateFixture({ id: activeFixture, density: value });
+  }
 
-  setFriction = (event: CustomEvent, value: number) =>
-    this.props.updateFixture({ id: this.props.activeFixture, friction: value });
+  setFriction = (event: CustomEvent, value: number) => {
+    const { activeFixture, updateFixture } = this.props;
+    updateFixture({ id: activeFixture, friction: value });
+  }
 
-  setRestitution = (event: CustomEvent, value: number) =>
-    this.props.updateFixture({ id: this.props.activeFixture, restitution: value });
+  setRestitution = (event: CustomEvent, value: number) => {
+    const { activeFixture, updateFixture } = this.props;
+    updateFixture({ id: activeFixture, restitution: value });
+  }
 
-  selectFixture = (event: CustomEvent) => this.props.setActiveFixture(event.detail.newValue);
+  selectFixture = (event: CustomEvent) => {
+    const { setActiveFixture } = this.props;
+    setActiveFixture(event.detail.newValue);
+  }
 
   render() {
     const { body, fixtures, activeFixture } = this.props;
@@ -48,7 +63,11 @@ export default class FixtureOptions extends React.Component<Props> {
     const fixture = fixtures[activeFixture];
     return fixture ? (
       <x-box style={styles.inputContainer} vertical>
-        <x-label><strong>Fixtures</strong></x-label>
+        <x-label>
+          <strong>
+            {'Fixtures'}
+          </strong>
+        </x-label>
         <x-box>
           <XSelect key={`body_${body.id}_fixtures`} style={styles.select} onChange={this.selectFixture}>
             <x-menu>
@@ -62,7 +81,11 @@ export default class FixtureOptions extends React.Component<Props> {
                 <main>
                   <x-box>
                     <x-box vertical>
-                      <x-label><strong>Density</strong></x-label>
+                      <x-label>
+                        <strong>
+                          {'Density'}
+                        </strong>
+                      </x-label>
                       <XNumberInput
                         value={fixture.density || 0}
                         min={0}
@@ -73,7 +96,11 @@ export default class FixtureOptions extends React.Component<Props> {
                       </XNumberInput>
                     </x-box>
                     <x-box style={styles.inputContainer} vertical>
-                      <x-label><strong>Friction</strong></x-label>
+                      <x-label>
+                        <strong>
+                          {'Friction'}
+                        </strong>
+                      </x-label>
                       <XNumberInput
                         value={fixture.friction || 0}
                         min={0}
@@ -84,7 +111,11 @@ export default class FixtureOptions extends React.Component<Props> {
                       </XNumberInput>
                     </x-box>
                     <x-box style={styles.inputContainer} vertical>
-                      <x-label><strong>Restitution</strong></x-label>
+                      <x-label>
+                        <strong>
+                          {'Restitution'}
+                        </strong>
+                      </x-label>
                       <XNumberInput
                         value={fixture.restitution || 0}
                         min={0}

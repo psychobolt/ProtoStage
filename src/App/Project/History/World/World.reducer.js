@@ -4,20 +4,22 @@ import { Actions as WorldActions } from 'App/Editor/World/World.actions';
 import { Actions as ProjectActions } from '../../Project.actions';
 import initialState from './World.state';
 
-const getEntitiesByIds = (keys, entities) =>
-  keys.reduce((rest, key) => ({ ...rest, [key]: entities[key] }), {});
+const getEntitiesByIds = (keys, entities) => keys
+  .reduce((rest, key) => ({ ...rest, [key]: entities[key] }), {});
 
-const getChildren = (keys, entities, mapper) =>
-  keys.reduce((rest, key) => rest.concat(mapper(entities[key])), []);
+const getChildren = (keys, entities, mapper) => keys
+  .reduce((rest, key) => rest.concat(mapper(entities[key])), []);
 
 const getFixtures = (state = initialState.fixtures, action) => {
   switch (action.type) {
     case WorldActions.ADD_FIXTURES:
-      return action.payload.fixtures.reduce((rest, fixture) =>
-        ({ ...rest, [fixture.id]: fixture }), state);
+      return action.payload.fixtures
+        .reduce((rest, fixture) => ({ ...rest, [fixture.id]: fixture }), state);
     case WorldActions.UPDATE_FIXTURES:
-      return action.payload.reduce((rest, fixture) =>
-        ({ ...rest, [fixture.id]: { ...state[fixture.id], ...fixture } }), state);
+      return action.payload
+        .reduce((rest, fixture) => ({
+          ...rest, [fixture.id]: { ...state[fixture.id], ...fixture },
+        }), state);
     default: return state;
   }
 };
@@ -34,8 +36,9 @@ const getFixtureIds = (state = initialState.fixtureIds, action) => {
 const getBodies = (state = initialState.bodies, action) => {
   switch (action.type) {
     case WorldActions.ADD_BODY: return { ...state, [action.payload.id]: action.payload };
-    case WorldActions.UPDATE_BODIES: return action.payload.reduce((bodies, body) =>
-      ({ ...bodies, [body.id]: { ...bodies[body.id], ...body } }), state);
+    case WorldActions.UPDATE_BODIES: return action.payload.reduce((bodies, body) => ({
+      ...bodies, [body.id]: { ...bodies[body.id], ...body },
+    }), state);
     case WorldActions.ADD_FIXTURES: return {
       ...state,
       ...action.payload.fixtures.reduce((rest, fixture) => ({
@@ -68,11 +71,14 @@ const getAnchors = (state = {}, action) => {
   switch (action.type) {
     case WorldActions.ADD_ANCHOR: return { ...state, [action.payload.id]: action.payload };
     case WorldActions.REMOVE_ANCHORS:
-      return Object.entries(state).reduce((anchors, [id, anchor]) =>
-        (action.payload.anchorIds.includes(id) ? anchors : { ...anchors, anchor }), {});
+      return Object.entries(state)
+        .reduce((anchors, [id, anchor]) => (action.payload.anchorIds
+          .includes(id) ? anchors : { ...anchors, anchor }), {});
     case WorldActions.UPDATE_ANCHORS:
-      return action.payload.anchors.reduce((anchors, anchor) =>
-        ({ ...anchors, [anchor.id]: { ...state[anchor.id], ...anchor } }), state);
+      return action.payload.anchors
+        .reduce((anchors, anchor) => (
+          { ...anchors, [anchor.id]: { ...state[anchor.id], ...anchor } }
+        ), state);
     default: return state;
   }
 };
@@ -81,8 +87,9 @@ const getJoints = (state = initialState.joints, action) => {
   switch (action.type) {
     case WorldActions.ADD_JOINT: return { ...state, [action.payload.id]: action.payload };
     // case WorldActions.REMOVE_BODIES:
-    case WorldActions.UPDATE_JOINTS: return action.payload.reduce((joints, joint) =>
-      ({ ...state, [joint.id]: { ...state[joint.id], ...joint } }), state);
+    case WorldActions.UPDATE_JOINTS: return action.payload.reduce((joints, joint) => ({
+      ...state, [joint.id]: { ...state[joint.id], ...joint },
+    }), state);
     case WorldActions.ADD_ANCHOR:
     case WorldActions.REMOVE_ANCHORS:
     case WorldActions.UPDATE_ANCHORS: {
@@ -166,4 +173,3 @@ export default (state = initialState, action) => {
     default: return state;
   }
 };
-

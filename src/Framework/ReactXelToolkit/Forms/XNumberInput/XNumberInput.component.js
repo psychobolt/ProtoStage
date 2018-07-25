@@ -2,7 +2,7 @@
 import React, { type Node } from 'react';
 
 type Props = {
-  onChange: (event: CustomEvent, value: number) => any,
+  onChange?: (event: CustomEvent, value: number) => any,
   children: Node
 }
 
@@ -21,14 +21,16 @@ export default class XNumberInput extends React.Component<Props> {
 
   onChange = (event: CustomEvent) => {
     if (this.input) {
+      const { onChange } = this.props;
       const value = parseFloat(this.input.getAttribute('value') || '', 10);
-      if (this.value !== value) this.props.onChange(event, value);
+      if (this.value !== value && onChange) onChange(event, value);
     }
   }
 
   setInput = (ref: ?HTMLElement) => { this.input = ref; };
 
   input: ?HTMLElement
+
   value: number
 
   render() {

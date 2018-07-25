@@ -23,8 +23,9 @@ type Props = {
   registerResizeListener: () => void
 };
 
-export const World =
-({ containerEl, containerWidth, containerHeight, registerResizeListener, ...rest }: Props) => {
+export const World = ({
+  containerEl, containerWidth, containerHeight, registerResizeListener, ...rest
+}: Props) => {
   const width = containerWidth;
   const height = containerHeight - 128;
   return (

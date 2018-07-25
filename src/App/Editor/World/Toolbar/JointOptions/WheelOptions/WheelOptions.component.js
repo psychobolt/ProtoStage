@@ -12,18 +12,26 @@ type Props = {
 }
 
 export default class WheelOptions extends React.Component<Props> {
-  setFrequency = (event: CustomEvent, value: number) =>
-    this.props.updateJoint({ id: this.props.joint.id, frequencyHz: value });
+  setFrequency = (event: CustomEvent, value: number) => {
+    const { joint, updateJoint } = this.props;
+    updateJoint({ id: joint.id, frequencyHz: value });
+  }
 
-  setDampingRatio = (event: CustomEvent, value: number) =>
-    this.props.updateJoint({ id: this.props.joint.id, dampingRatio: value });
+  setDampingRatio = (event: CustomEvent, value: number) => {
+    const { joint, updateJoint } = this.props;
+    updateJoint({ id: joint.id, dampingRatio: value });
+  }
 
   render() {
     const { joint } = this.props;
     return (
       <React.Fragment>
         <x-box style={styles.inputContainer} vertical>
-          <x-label><strong>Frequency</strong></x-label>
+          <x-label>
+            <strong>
+              {'Frequency'}
+            </strong>
+          </x-label>
           <XNumberInput
             value={joint.frequencyHz}
             min={2}
@@ -34,7 +42,11 @@ export default class WheelOptions extends React.Component<Props> {
           </XNumberInput>
         </x-box>
         <x-box style={styles.inputContainer} vertical>
-          <x-label><strong>Damping Ratio</strong></x-label>
+          <x-label>
+            <strong>
+              {'Damping Ratio'}
+            </strong>
+          </x-label>
           <XNumberInput
             value={joint.dampingRatio}
             min={0}

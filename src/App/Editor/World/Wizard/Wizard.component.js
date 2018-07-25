@@ -17,18 +17,30 @@ const Wizard = ({ projectId }: Props) => (
     <div style={styles.overlay} />
     <x-card style={styles.card}>
       <header>
-        <h3><strong>Choose your scene</strong></h3>
+        <h3>
+          <strong>
+            {'Choose your scene'}
+          </strong>
+        </h3>
       </header>
       <main>
         <x-box>
           <x-box>
             <RouteLink to={`/project/${projectId}/scene2d`} selectedProp="toggled">
-              <XButton>2D Scene</XButton>
+              {({ onClick }) => (
+                <XButton onClick={onClick}>
+                  {'2D Scene'}
+                </XButton>
+              )}
             </RouteLink>
           </x-box>
           <x-box>
             <RouteLink to={`project/${projectId}/scene3d`} selectedProp="toggled">
-              <XButton>3D Scene</XButton>
+              {({ onClick }) => (
+                <XButton onClick={onClick}>
+                  {'3D Scene'}
+                </XButton>
+              )}
             </RouteLink>
           </x-box>
         </x-box>
@@ -37,7 +49,7 @@ const Wizard = ({ projectId }: Props) => (
   </div>
 );
 
-const connector: Connector<Props, {}> = connect(state =>
-  ({ projectId: getProject(state).id }), () => ({}));
+const connector: Connector<Props, {}> = connect(state => ({ projectId: getProject(state).id }),
+  () => ({}));
 
 export default connector(Wizard);

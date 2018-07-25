@@ -24,12 +24,12 @@ export default () => [
   <Plane
     key="3"
     geometry={{
-        width: 100,
-        height: 100,
+      width: 100,
+      height: 100,
     }}
     material={new THREE.MeshPhongMaterial({ color: 0x447F8B })}
     rotation={{
-        x: -Math.PI / 2,
+      x: -Math.PI / 2,
     }}
   />,
   <PointLight
@@ -37,7 +37,7 @@ export default () => [
     intensity={0.5}
     distance={100}
     shadow={{
-        fow: 90,
+      fow: 90,
     }}
     position={new THREE.Vector3(0, 10, 10)}
   />,

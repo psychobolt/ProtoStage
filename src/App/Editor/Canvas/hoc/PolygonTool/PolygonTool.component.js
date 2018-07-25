@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { PolygonTool } from '@psychobolt/react-paperjs';
+import { PolygonTool } from '@psychobolt/react-paperjs-editor';
 
 import { getCanvas } from 'App/App.selectors';
 
@@ -15,24 +15,23 @@ export function getProperties(path) {
   };
 }
 
-export default Container =>
-  @connect(
-    state => {
-      const { paths, selectedPathIds, activeTool, activeLayer } = getCanvas(state);
-      return { paths, selectedPathIds, lastActiveTool: activeTool, activeLayer };
+export default Container => @connect(
+  state => {
+    const { paths, selectedPathIds, activeTool, activeLayer } = getCanvas(state);
+    return { paths, selectedPathIds, lastActiveTool: activeTool, activeLayer };
+  },
+  dispatch => ({
+    newPath: (path, skipHistory) => {
+      const newPath = addPath(path, skipHistory);
+      dispatch(newPath);
+      return newPath.payload.id;
     },
-    dispatch => ({
-      newPath: (path, skipHistory) => {
-        const newPath = addPath(path, skipHistory);
-        dispatch(newPath);
-        return newPath.payload.id;
-      },
-      removePaths: id => dispatch(removePaths(id)),
-      updatePath: path => dispatch(updatePaths([path])),
-      selectPath: id => dispatch(selectPaths([id])),
-      deselectAll: skipHistory => dispatch(deselectAll(skipHistory)),
-    }),
-  )
+    removePaths: id => dispatch(removePaths(id)),
+    updatePath: path => dispatch(updatePaths([path])),
+    selectPath: id => dispatch(selectPaths([id])),
+    deselectAll: skipHistory => dispatch(deselectAll(skipHistory)),
+  }),
+)
   class extends Tool {
     state = {
       pathId: null,
@@ -57,7 +56,10 @@ export default Container =>
 
     getIcon = () => <i className="icon icon-closed-shape-tool fa-2x" />
 
-    getTool = ref => <PolygonTool pathData={this.state.pathData} key={`${this.TOOL_NAME}Tool`} ref={ref} onSegmentAdd={this.onSegmentAdd} onPathAdd={this.onPathAdd} />
+    getTool = ref => {
+      const { pathData } = this.state; // eslint-disable-line react/no-this-in-sfc
+      return <PolygonTool pathData={pathData} key={`${this.TOOL_NAME}Tool`} ref={ref} onSegmentAdd={this.onSegmentAdd} onPathAdd={this.onPathAdd} />; // eslint-disable-line react/no-this-in-sfc
+    }
 
     onSelect() {
       super.onSelect();
@@ -105,6 +107,8 @@ export default Container =>
     }
 
     TOOL_NAME = 'Polygon'
+
     Container = Container
+
     history = [];
-  };
+};

@@ -6,9 +6,13 @@ import styles from './Editor.style';
 
 const Editor = () => (
   <x-box style={styles.container}>
-    <div style={styles.panel}><Canvas /></div>
+    <div style={styles.panel}>
+      <Canvas />
+    </div>
     <div style={styles.divider} />
-    <div style={styles.panel}><World /></div>
+    <div style={styles.panel}>
+      <World />
+    </div>
   </x-box>
 );
 

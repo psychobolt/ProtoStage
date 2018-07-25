@@ -1,1 +1,2 @@
-export { default, Tool, Props as ToolProps } from './Tool.component';
+export * from './Tool.component';
+export default from './Tool.component';

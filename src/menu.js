@@ -74,6 +74,8 @@ export default (win, store) => {
 
   const { dispatch, subscribe, getState } = store;
   let state = getState();
+  const projectLoaded = isProjectLoaded(state);
+  const isMac = process.platform === 'darwin';
 
   const fileMenu = () => ({
     label: 'File',
@@ -83,7 +85,7 @@ export default (win, store) => {
         accelerator: 'CommandOrControl+O',
         click: () => loadWorkspace(store),
       },
-      ...(isProjectLoaded(state) ? [
+      ...(projectLoaded ? [
         {
           label: 'Save Workspace',
           accelerator: 'CommandOrControl+S',
@@ -145,8 +147,8 @@ export default (win, store) => {
               dispatch(action);
               action = addFixtures(action.payload.id, fixtures, true);
               dispatch(action);
-              action.payload.fixtures.forEach(fixture =>
-                dispatch(linkPath(fixture.pathId, { fixtureId: fixture.id })));
+              action.payload.fixtures
+                .forEach(fixture => dispatch(linkPath(fixture.pathId, { fixtureId: fixture.id })));
             },
             accelerator: 'CommandOrControl+Shift+B',
           },
@@ -222,15 +224,15 @@ export default (win, store) => {
 
   const template = [
     fileMenu(),
-    ...(projectId ? [editMenu()] : []),
-    ...(projectId ? [canvasMenu()] : []),
-    ...(projectId ? [sceneMenu()] : []),
+    ...(projectLoaded ? [editMenu()] : []),
+    ...(projectLoaded ? [canvasMenu()] : []),
+    ...(projectLoaded ? [sceneMenu()] : []),
     viewMenu(),
     ...(process.env.NODE_ENV === 'development' ? [goMenu()] : []),
     { role: 'windowMenu' },
   ];
 
-  if (process.platform === 'darwin') {
+  if (isMac) {
     template.unshift({
       label: app.getName(),
       submenu: [
@@ -247,12 +249,12 @@ export default (win, store) => {
 
   const menu = Menu.buildFromTemplate(template);
 
-  if (projectId) {
+  if (projectLoaded) {
     const [
       fileMenuItem, // eslint-disable-line no-unused-vars
       editMenuItem,
       canvasMenuItem,
-    ] = menu.items;
+    ] = isMac ? menu.items.slice(1) : menu.items;
     const [undoItem, redoItem] = editMenuItem.submenu.items;
     const [
       selectionMenu,

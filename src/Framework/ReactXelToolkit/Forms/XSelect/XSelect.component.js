@@ -2,7 +2,7 @@
 import React, { type Node } from 'react';
 
 type Props = {
-  onChange: (event: CustomEvent, value: number) => any,
+  onChange?: (event: CustomEvent, value: number) => any,
   children: Node
 }
 
@@ -12,11 +12,13 @@ export default class XSelect extends React.Component<Props> {
   }
 
   componentDidMount() {
-    if (this.select) this.select.addEventListener('change', this.props.onChange);
+    const { onChange } = this.props;
+    if (this.select) this.select.addEventListener('change', onChange);
   }
 
   componentWillUnmount() {
-    if (this.select) this.select.removeEventListener('change', this.props.onChange);
+    const { onChange } = this.props;
+    if (this.select) this.select.removeEventListener('change', onChange);
   }
 
   setSelect = (ref: ?HTMLElement) => { this.select = ref; };
@@ -25,6 +27,10 @@ export default class XSelect extends React.Component<Props> {
 
   render() {
     const { onChange, children, ...rest } = this.props;
-    return <x-select ref={this.setSelect} {...rest}>{children}</x-select>;
+    return (
+      <x-select ref={this.setSelect} {...rest}>
+        {children}
+      </x-select>
+    );
   }
 }

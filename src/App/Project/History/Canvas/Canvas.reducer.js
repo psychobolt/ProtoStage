@@ -5,11 +5,11 @@ import { Actions as CanvasActions } from 'App/Editor/Canvas/Canvas.actions';
 import { Actions as ProjectActions } from '../../Project.actions';
 import initialState from './Canvas.state';
 
-const getEntitiesByIds = (ids, entities) =>
-  ids.reduce((rest, id) => ({ ...rest, [id]: entities[id] }), {});
+const getEntitiesByIds = (ids, entities) => ids
+  .reduce((rest, id) => ({ ...rest, [id]: entities[id] }), {});
 
-const getChildren = (keys, entities, mapper) =>
-  keys.reduce((rest, key) => rest.concat(mapper(entities[key])), []);
+const getChildren = (keys, entities, mapper) => keys
+  .reduce((rest, key) => rest.concat(mapper(entities[key])), []);
 
 const getPaths = (state = initialState.paths, action) => {
   switch (action.type) {
@@ -21,12 +21,12 @@ const getPaths = (state = initialState.paths, action) => {
         [path.id]: { ...state[path.id], ...path },
       }), {}),
     };
-    case CanvasActions.DESELECT_ALL: return Object.keys(state).reduce((rest, id) =>
-      ({ ...rest, [id]: { ...state[id], selected: false } }), {});
+    case CanvasActions.DESELECT_ALL: return Object
+      .keys(state).reduce((rest, id) => ({ ...rest, [id]: { ...state[id], selected: false } }), {});
     case CanvasActions.SELECT_PATHS: return {
       ...state,
-      ...action.payload.ids.reduce((paths, id) =>
-        ({ ...paths, [id]: { ...state[id], selected: true } }), {}),
+      ...action.payload.ids
+        .reduce((paths, id) => ({ ...paths, [id]: { ...state[id], selected: true } }), {}),
     };
     default: return state;
   }

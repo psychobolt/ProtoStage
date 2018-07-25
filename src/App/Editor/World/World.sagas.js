@@ -48,8 +48,8 @@ function* onUpdatePaths(action) {
 
 function* onRemovePaths(action) {
   const { fixtureIds, fixtures } = yield select(getWorld);
-  yield put(removeFixtures(fixtureIds.filter(id =>
-    action.payload.ids.includes(fixtures[id].pathId)), true));
+  yield put(removeFixtures(fixtureIds
+    .filter(id => action.payload.ids.includes(fixtures[id].pathId)), true));
 }
 
 function* onAddBody(action) {

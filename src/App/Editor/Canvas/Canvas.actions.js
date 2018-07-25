@@ -26,16 +26,21 @@ export const addPath = (path, skipHistory) => ({
   meta: { skipHistory },
 });
 
-export const linkPath = (id, links) =>
-  ({ type: Actions.LINK_PATH, payload: { id, links }, meta: { skipHistory: true } });
+export const linkPath = (id, links) => ({
+  type: Actions.LINK_PATH, payload: { id, links }, meta: { skipHistory: true },
+});
 
-export const removePaths = (ids, skipHistory) =>
-  ({ type: Actions.REMOVE_PATHS, payload: { ids }, meta: { skipHistory } });
+export const removePaths = (ids, skipHistory) => ({
+  type: Actions.REMOVE_PATHS, payload: { ids }, meta: { skipHistory },
+});
 
-export const updatePaths = payload => ({ type: Actions.UPDATE_PATHS, payload });
+export const updatePaths = payload => ({
+  type: Actions.UPDATE_PATHS, payload,
+});
 
-export const selectPaths = (ids, skipHistory) =>
-  ({ type: Actions.SELECT_PATHS, payload: { ids }, meta: { skipHistory } });
+export const selectPaths = (ids, skipHistory) => ({
+  type: Actions.SELECT_PATHS, payload: { ids }, meta: { skipHistory },
+});
 
 export const deselectAll = skipHistory => ({ type: Actions.DESELECT_ALL, meta: { skipHistory } });
 
@@ -50,16 +55,21 @@ export const addLayer = skipHistory => ({
 
 export const removeLayers = ids => ({ type: Actions.REMOVE_LAYERS, payload: { ids } });
 
-export const linkLayer = (id, links) =>
-  ({ type: Actions.LINK_LAYER, payload: { id, links }, meta: { skipHistory: true } });
+export const linkLayer = (id, links) => ({
+  type: Actions.LINK_LAYER, payload: { id, links }, meta: { skipHistory: true },
+});
 
-export const selectLayer = id =>
-  ({ type: Actions.SELECT_LAYER, payload: { id }, meta: { skipHistory: true } });
+export const selectLayer = id => ({
+  type: Actions.SELECT_LAYER, payload: { id }, meta: { skipHistory: true },
+});
 
-export const selectTool = tool =>
-  ({ type: Actions.SELECT_TOOL, payload: { tool }, meta: { skipHistory: true } });
+export const selectTool = tool => ({
+  type: Actions.SELECT_TOOL, payload: { tool }, meta: { skipHistory: true },
+});
 
-export const setGridSpacing = spacing => ({ type: Actions.SET_GRID_SPACING, payload: { spacing } });
+export const setGridSpacing = spacing => ({
+  type: Actions.SET_GRID_SPACING, payload: { spacing },
+});
 
 export const toggleAutoSync = () => ({ type: Actions.TOGGLE_AUTO_SYNC });
 

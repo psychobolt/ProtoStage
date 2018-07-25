@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { LineTool } from '@psychobolt/react-paperjs';
+import { LineTool } from '@psychobolt/react-paperjs-editor';
 
 import { getCanvas } from 'App/App.selectors';
 
@@ -18,21 +18,20 @@ export function getProperties(path) {
   };
 }
 
-export default Container =>
-  @connect(
-    state => {
-      const { selectedPathIds, activeLayer } = getCanvas(state);
-      return { selectedPathIds, activeLayer };
-    },
-    dispatch => ({
-      newPath: (path, skipHistory) => dispatch(addPath(path, skipHistory)),
-      deselectAll: () => dispatch(deselectAll()),
-    }),
-  )
+export default Container => @connect(
+  state => {
+    const { selectedPathIds, activeLayer } = getCanvas(state);
+    return { selectedPathIds, activeLayer };
+  },
+  dispatch => ({
+    newPath: (path, skipHistory) => dispatch(addPath(path, skipHistory)),
+    deselectAll: () => dispatch(deselectAll()),
+  }),
+)
   class extends Tool {
     getIcon = () => <i className="icon icon-line-tool fa-2x" />
 
-    getTool = ref => <LineTool key={`${this.TOOL_NAME}Tool`} ref={ref} onPathAdd={this.onPathAdd} />
+    getTool = ref => <LineTool key={`${this.TOOL_NAME}Tool`} ref={ref} onPathAdd={this.onPathAdd} /> // eslint-disable-line react/no-this-in-sfc
 
     onSelect() {
       super.onSelect();
@@ -51,5 +50,6 @@ export default Container =>
     }
 
     TOOL_NAME = SHAPE
+
     Container = Container
-  };
+};

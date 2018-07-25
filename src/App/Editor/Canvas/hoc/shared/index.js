@@ -1,1 +1,1 @@
-export * from './Tool';
+export { Props as ToolProps } from './Tool';

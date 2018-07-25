@@ -26,8 +26,9 @@ export const Actions = {
 
 export const updateGravity = gravity => ({ type: Actions.UPDATE_GRAVITY, payload: gravity });
 
-export const setPixelsPerMeter = value =>
-  ({ type: Actions.SET_PIXELS_PER_METER, payload: { value } });
+export const setPixelsPerMeter = value => ({
+  type: Actions.SET_PIXELS_PER_METER, payload: { value },
+});
 
 export const addBody = skipHistory => ({
   type: Actions.ADD_BODY,
@@ -63,13 +64,15 @@ export const addFixtures = (bodyId, fixtures, skipHistory) => ({
   meta: { skipHistory },
 });
 
-export const removeFixtures = (ids, skipHistory) =>
-  ({ type: Actions.REMOVE_FIXTURES, payload: { ids }, meta: { skipHistory } });
+export const removeFixtures = (ids, skipHistory) => ({
+  type: Actions.REMOVE_FIXTURES, payload: { ids }, meta: { skipHistory },
+});
 
 export const updateFixtures = fixtures => ({ type: Actions.UPDATE_FIXTURES, payload: fixtures });
 
-export const selectBody = id =>
-  ({ type: Actions.SELECT_BODY, payload: { id }, meta: { skipHistory: true } });
+export const selectBody = id => ({
+  type: Actions.SELECT_BODY, payload: { id }, meta: { skipHistory: true },
+});
 
 export const addJoint = options => ({
   type: Actions.ADD_JOINT,
@@ -96,11 +99,13 @@ export const addAnchor = (jointId, anchor) => ({
   },
 });
 
-export const removeAnchors = (jointId, anchorIds) =>
-  ({ type: Actions.REMOVE_ANCHORS, payload: { jointId, anchorIds } });
+export const removeAnchors = (jointId, anchorIds) => ({
+  type: Actions.REMOVE_ANCHORS, payload: { jointId, anchorIds },
+});
 
-export const updateAnchors = (jointId, anchors) =>
-  ({ type: Actions.UPDATE_ANCHORS, payload: { jointId, anchors } });
+export const updateAnchors = (jointId, anchors) => ({
+  type: Actions.UPDATE_ANCHORS, payload: { jointId, anchors },
+});
 
 export const togglePause = () => ({ type: Actions.TOGGLE_PAUSE });
 

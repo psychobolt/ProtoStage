@@ -27,22 +27,21 @@ function getProperties(type, path) {
   }
 }
 
-export default Container =>
-  @connect(
-    state => {
-      const { selectedPathIds, paths } = getCanvas(state);
-      return { selectedPathIds, paths };
-    },
-    dispatch => ({
-      updatePaths: paths => dispatch(updatePaths(paths)),
-      selectPath: id => dispatch(selectPaths([id])),
-      deselectAll: skipHistory => dispatch(deselectAll(skipHistory)),
-    }),
-  )
+export default Container => @connect(
+  state => {
+    const { selectedPathIds, paths } = getCanvas(state);
+    return { selectedPathIds, paths };
+  },
+  dispatch => ({
+    updatePaths: paths => dispatch(updatePaths(paths)),
+    selectPath: id => dispatch(selectPaths([id])),
+    deselectAll: skipHistory => dispatch(deselectAll(skipHistory)),
+  }),
+)
   class MoveTool extends ToolComponent {
     getIcon = () => <i className="fa fa-arrows fa-2x" />
 
-    getTool = ref => <Tool key={`${this.TOOL_NAME}Tool`} onMouseMove={this.onMouseMove} onMouseDown={this.onMouseDown} onMouseDrag={this.onMouseDrag} onMouseUp={this.onMouseUp} ref={ref} />
+    getTool = ref => <Tool key={`${this.TOOL_NAME}Tool`} onMouseMove={this.onMouseMove} onMouseDown={this.onMouseDown} onMouseDrag={this.onMouseDrag} onMouseUp={this.onMouseUp} ref={ref} /> // eslint-disable-line react/no-this-in-sfc
 
     onMouseMove = event => {
       const { cursor, setCursor } = this.props;
@@ -50,7 +49,7 @@ export default Container =>
       if (cursor !== CURSOR_MOVE && item && typeof item.data.pathId !== 'undefined') {
         setCursor(CURSOR_MOVE);
       } else if (cursor === CURSOR_MOVE && !item) {
-        setCursor('auto');
+        setCursor(null);
       }
     }
 
@@ -108,6 +107,8 @@ export default Container =>
     }
 
     TOOL_NAME = 'Move'
+
     Container = Container
+
     items = [];
-  };
+};

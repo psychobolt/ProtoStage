@@ -89,7 +89,8 @@ class Canvas extends React.Component<Props, State> {
   }
 
   onKeyDown = (event: KeyEvent) => {
-    if (event.key === 'control' && !this.state.enableMenu) {
+    const { enableMenu } = this.state;
+    if (event.key === 'control' && !enableMenu) {
       this.setState({ enableMenu: true });
     }
   }
@@ -101,8 +102,8 @@ class Canvas extends React.Component<Props, State> {
   }
 
   onMouseDown = (e: MouseEvent) => {
-    const { menuX, menuY } = this.state;
-    if (this.state.enableMenu && !menuX && !menuY && e.event.button === MOUSE_RIGHT_CODE) {
+    const { menuX, menuY, enableMenu } = this.state;
+    if (enableMenu && !menuX && !menuY && e.event.button === MOUSE_RIGHT_CODE) {
       this.setState({
         menuX: `${e.event.pageX}px`,
         menuY: `${e.event.pageY}px`,
@@ -111,7 +112,8 @@ class Canvas extends React.Component<Props, State> {
   }
 
   onMouseUp = (e: SyntheticMouseEvent<HTMLDivElement>) => {
-    if (this.state.enableMenu && e.button === MOUSE_RIGHT_CODE) {
+    const { enableMenu } = this.state;
+    if (enableMenu && e.button === MOUSE_RIGHT_CODE) {
       this.setState({
         menuX: null,
         menuY: null,
@@ -125,7 +127,8 @@ class Canvas extends React.Component<Props, State> {
   }
 
   onMouseMove = (event: MouseEvent) => {
-    if (this.state.focused) {
+    const { focused } = this.state;
+    if (focused) {
       const { x, y } = event.point;
       this.setState({
         mouseX: `${x.toFixed()}px`,
@@ -151,7 +154,8 @@ class Canvas extends React.Component<Props, State> {
   }
 
   onPanDisabled = () => {
-    this.props.setActiveTool(this.lastActiveTool);
+    const { setActiveTool } = this.props;
+    setActiveTool(this.lastActiveTool);
   }
 
   getPaths = (pathIds, paths) => pathIds.map(pathId => {
@@ -161,7 +165,11 @@ class Canvas extends React.Component<Props, State> {
 
   getLayers = defaultMemoize((layerIds, layers, paths) => layerIds.map(layerId => {
     const { id, pathIds, ...rest } = layers[layerId];
-    return (<Layer key={`layer_${id}`} data={{ layerId: id }} {...rest}>{this.getPaths(pathIds, paths)}</Layer>);
+    return (
+      <Layer key={`layer_${id}`} data={{ layerId: id }} {...rest}>
+        {this.getPaths(pathIds, paths)}
+      </Layer>
+    );
   }))
 
   lastActiveTool: string;
@@ -181,6 +189,7 @@ class Canvas extends React.Component<Props, State> {
       autoSync,
     } = this.props;
     const { mouseX, mouseY, menuX, menuY, enableMenu } = this.state;
+    const { addLayer, selectLayer, setGridSpacing, toggleAutoSync, zoom } = this.props;
     return (
       <div
         role="presentation"
@@ -189,19 +198,19 @@ class Canvas extends React.Component<Props, State> {
         onMouseUp={this.onMouseUp}
       >
         <Toolbar
-          addLayer={this.props.addLayer}
+          addLayer={addLayer}
           removeLayer={removeLayer}
-          selectLayer={this.props.selectLayer}
+          selectLayer={selectLayer}
           layerIds={layerIds}
           activeLayer={activeLayer}
           gridSpacing={gridSpacing}
-          setGridSpacing={this.props.setGridSpacing}
+          setGridSpacing={setGridSpacing}
           autoSync={autoSync}
-          toggleAutoSync={this.props.toggleAutoSync}
+          toggleAutoSync={toggleAutoSync}
         />
         <Paper
           viewZoom={zoomLevel}
-          onZoom={this.props.zoom}
+          onZoom={zoom}
           onKeyUp={this.onKeyUp}
           onKeyDown={this.onKeyDown}
           onMouseDown={this.onMouseDown}
@@ -216,15 +225,18 @@ class Canvas extends React.Component<Props, State> {
           {this.getLayers(layerIds, layers, paths)}
           {children}
         </Paper>
-        {mouseX && mouseY && <div style={styles.statOverlay}><x-label>{` x=${mouseX}  y=${mouseY}`}</x-label></div>}
-        {menuSlices.length && enableMenu && menuX && menuY &&
+        {mouseX && mouseY && (
+          <div style={styles.statOverlay}>
+            <x-label>
+              {` x=${mouseX}  y=${mouseY}`}
+            </x-label>
+          </div>
+        )}
+        {menuSlices.length && enableMenu && menuX && menuY && (
           <PieMenu centerX={menuX} centerY={menuY}>
             {menuSlices}
-            {/*
-            <Slice><i className="fa fa-i-cursor fa-2x" /></Slice>
-            */}
           </PieMenu>
-        }
+        )}
       </div>
     );
   }
@@ -247,10 +259,10 @@ export default compose(
     })),
   ),
   withStateHandlers(
-    { activeTool: 'Select', cursor: 'auto' },
+    { activeTool: 'Select', cursor: null },
     {
-      setActiveTool: (state, props) => (activeTool: string) => {
-        props.storeToolHistory(activeTool);
+      setActiveTool: (state, { storeToolHistory }) => (activeTool: string) => {
+        storeToolHistory(activeTool);
         return { activeTool };
       },
       setCursor: () => (cursor: string) => ({ cursor }),

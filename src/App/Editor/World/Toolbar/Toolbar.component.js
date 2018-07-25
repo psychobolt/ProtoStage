@@ -9,55 +9,87 @@ import styles from './Toolbar.style';
 
 type Props = BodyOptionsProps & FixtureOptionsProps & JointOptionsProps & WorldOptionsProps;
 
-const Toolbar = (props: Props) => (
+const Toolbar = ({
+  bodyIds,
+  bodies,
+  activeBody,
+  selectBody,
+  removeBody,
+  updateBody,
+  pixelsPerMeter,
+  setPixelsPerMeter,
+  fixtures,
+  activeFixture,
+  setActiveFixture,
+  updateFixture,
+  paths,
+  jointIds,
+  joints,
+  activeJoint,
+  addJoint,
+  removeJoint,
+  updateJoint,
+  setActiveJoint,
+  addAnchor,
+  removeAnchor,
+  updateAnchor,
+  tracking,
+  gravity,
+  updateGravity,
+  mouseForce,
+  updateMouseForce,
+  speed,
+  updateSpeed,
+  toggleTracking,
+}: Props) => (
   <x-box style={styles.container} vertical>
     <x-box>
       <BodyOptions
-        bodyIds={props.bodyIds}
-        bodies={props.bodies}
-        activeBody={props.activeBody}
-        selectBody={props.selectBody}
-        removeBody={props.removeBody}
-        updateBody={props.updateBody}
+        bodyIds={bodyIds}
+        bodies={bodies}
+        activeBody={activeBody}
+        selectBody={selectBody}
+        removeBody={removeBody}
+        updateBody={updateBody}
       />
       <JointOptions
-        pixelsPerMeter={props.pixelsPerMeter}
-        bodyIds={props.bodyIds}
-        bodies={props.bodies}
-        fixtures={props.fixtures}
-        paths={props.paths}
-        joint={props.joints[props.activeJoint]}
-        jointIds={props.jointIds}
-        activeJoint={props.activeJoint}
-        addJoint={props.addJoint}
-        removeJoint={props.removeJoint}
-        updateJoint={props.updateJoint}
-        setActiveJoint={props.setActiveJoint}
-        addAnchor={props.addAnchor}
-        removeAnchor={props.removeAnchor}
-        updateAnchor={props.updateAnchor}
+        pixelsPerMeter={pixelsPerMeter}
+        bodyIds={bodyIds}
+        bodies={bodies}
+        fixtures={fixtures}
+        paths={paths}
+        joint={joints[activeJoint]}
+        jointIds={jointIds}
+        activeJoint={activeJoint}
+        addJoint={addJoint}
+        removeJoint={removeJoint}
+        updateJoint={updateJoint}
+        setActiveJoint={setActiveJoint}
+        addAnchor={addAnchor}
+        removeAnchor={removeAnchor}
+        updateAnchor={updateAnchor}
       />
     </x-box>
     <hr style={styles.divider} />
     <x-box>
       <FixtureOptions
-        body={props.bodies[props.activeBody]}
-        fixtures={props.fixtures}
-        updateFixture={props.updateFixture}
-        activeFixture={props.activeFixture}
-        setActiveFixture={props.setActiveFixture}
+        body={bodies[activeBody]}
+        fixtures={fixtures}
+        updateFixture={updateFixture}
+        activeFixture={activeFixture}
+        setActiveFixture={setActiveFixture}
       />
       <WorldOptions
-        tracking={props.tracking}
-        pixelsPerMeter={props.pixelsPerMeter}
-        gravity={props.gravity}
-        mouseForce={props.mouseForce}
-        speed={props.speed}
-        updateSpeed={props.updateSpeed}
-        updateMouseForce={props.updateMouseForce}
-        updateGravity={props.updateGravity}
-        toggleTracking={props.toggleTracking}
-        setPixelsPerMeter={props.setPixelsPerMeter}
+        tracking={tracking}
+        pixelsPerMeter={pixelsPerMeter}
+        gravity={gravity}
+        mouseForce={mouseForce}
+        speed={speed}
+        updateSpeed={updateSpeed}
+        updateMouseForce={updateMouseForce}
+        updateGravity={updateGravity}
+        toggleTracking={toggleTracking}
+        setPixelsPerMeter={setPixelsPerMeter}
       />
     </x-box>
   </x-box>

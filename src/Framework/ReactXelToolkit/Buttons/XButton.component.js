@@ -9,6 +9,8 @@ type Props = {
 
 export default ({ toggled = false, children, ...rest }: Props) => (
   <x-button {...rest} toggled={toggled || null}>
-    <x-label>{children}</x-label>
+    <x-label>
+      {children}
+    </x-label>
   </x-button>
 );
