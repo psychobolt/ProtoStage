@@ -1,6 +1,5 @@
 // @flow
-// $FlowFixMe
-import React, { forwardRef } from 'react';
+import * as React from 'react';
 import {
   SceneModule,
   DefineModule,
@@ -12,7 +11,6 @@ import {
 import { App } from 'react-whs';
 import { defaultMemoize } from 'reselect';
 import * as THREE from 'three';
-import styled from 'styled-components';
 
 import { Cube } from './examples';
 
@@ -28,16 +26,15 @@ type ParentProps = {
   children: any
 }
 
-const Parent = defaultMemoize(className => forwardRef((
-  { children: child, className: defaultClass, ...rest }: ParentProps,
-  ref,
+const Parent = defaultMemoize(className => React.forwardRef((
+  { children: child, className: defaultClass, ...rest }: ParentProps, ref,
 ) => (
   <div className={`${defaultClass} ${className}`} ref={ref} {...rest}>
     {child}
   </div>
 )));
 
-class Scene3D extends React.Component<Props> {
+export default class Scene3D extends React.Component<Props> {
   static defaultProps = {
     width: 680,
     height: 420,
@@ -45,7 +42,7 @@ class Scene3D extends React.Component<Props> {
 
   constructor(props: Props) {
     super(props);
-    const { width, height } = props;
+    const { width = 680, height = 420 } = props;
     this.modules = [
       new SceneModule(),
       new DefineModule('camera', new PerspectiveCamera({
@@ -85,7 +82,3 @@ class Scene3D extends React.Component<Props> {
     );
   }
 }
-
-export default styled(Scene3D)`
-  /* stylelint-disable-line block-no-empty */
-`;

@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { ConnectedRouter } from 'react-router-redux';
-import { type History } from 'history';
+import { ConnectedRouter } from 'connected-react-router';
+import { History } from 'history';
 
 import App from './App';
 

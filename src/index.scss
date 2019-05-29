@@ -1,5 +1,13 @@
 body {
     overflow: auto;
+
+    .captureMenuComponent {
+      top: calc(100% - 126px)
+    }
+
+    .captureMenuLogComponent {
+      top: calc(100% - 70px);
+    }
 }
 
 @mixin full-container {

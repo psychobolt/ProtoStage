@@ -12,7 +12,7 @@ import CommonConfig from './webpack.common';
 const devMode = process.env.NODE_ENV !== 'production';
 
 let config = {
-  entry: ['css-hot-loader/hotModuleReplacement', 'react-hot-loader/patch', './src/index.js'],
+  entry: ['react-hot-loader/patch', 'css-hot-loader/hotModuleReplacement', './src/index.js'],
   output: {
     filename: 'app.bundle.js',
     path: path.resolve(__dirname, 'src', '.build'),
@@ -85,13 +85,16 @@ let htmlConfig = {
 if (devMode) {
   config = merge(config, {
     devtool: 'eval-source-map',
+    devServer: {
+      host: 'localhost',
+      port: 3000,
+      hot: true,
+      historyApiFallback: true,
+    },
     plugins: [
       new webpack.NamedModulesPlugin(),
       new webpack.HotModuleReplacementPlugin(),
       new HtmlWebpackPlugin(htmlConfig),
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('development'),
-      }),
       new BundleAnalyzerPlugin(),
     ],
   });
@@ -116,13 +119,16 @@ if (devMode) {
   });
   config = merge(config, {
     plugins: [
-      new CleanWebpackPlugin([
-        'src/.build/*.html',
-        'src/.build/app.bundle.js',
-        'src/.build/*.css',
-        'src/.build/*.woff',
-        'src/.build/*.woff2',
-      ]),
+      new CleanWebpackPlugin({
+        cleanOnceBeforeBuildPatterns: [
+          '*.html',
+          'app.bundle.js',
+          '*.app.bundle.js',
+          '*.css',
+          '*.woff',
+          '*.woff2',
+        ],
+      }),
       new OptimizeCssAssetsPlugin({
         cssProcessorOptions: { discardComments: { removeAll: true } },
       }),

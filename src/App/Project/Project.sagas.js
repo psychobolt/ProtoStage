@@ -1,4 +1,4 @@
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { put, takeEvery, select } from 'redux-saga/effects';
 
 import { getProject } from '../App.selectors';

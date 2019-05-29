@@ -1,5 +1,5 @@
 import { app, Menu, dialog } from 'electron';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import fs from 'fs';
 
 import { undo, redo } from './shared/actions';

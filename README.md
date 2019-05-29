@@ -37,25 +37,14 @@ Tesing only with production code (watch and debug unnecessary):
 yarn prod
 ```
 
-### Adding dependencies (libraries)
-
-This project uses two package.json structure. For more details, see [here](https://github.com/electron-userland/electron-builder/wiki/Two-package.json-Structure).
-
-#### Default -- <root_dir>/package.json
+## Adding dependencies (libraries)
 
 ```sh
 yarn add [package-name] --dev # for dev tools
 yarn add [package-name] # for app
 ```
 
-#### Native libraries -- <root_dir>/src/package.json
-
-```sh
-cd src/
-yarn add [package-name]
-```
-
-### Merging from base project
+## Merging from base project
 
 This project is a fork from psychobolt's [react-electron-boilerplate](https://github.com/psychobolt/whitestorm-react-electron-boilerplate). To fetch latest changes, ```git remote add base https://github.com/psychobolt/whitestorm-react-electron-boilerplate.git```. On a clean working branch, ```git pull base master```, and fix any conflicts before commit.
 

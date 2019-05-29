@@ -39,6 +39,9 @@ async function createWindow() {
     y: mainWindowState.y,
     width: mainWindowState.width,
     height: mainWindowState.height,
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
 
   // then register listeners on window, so the state can be updated

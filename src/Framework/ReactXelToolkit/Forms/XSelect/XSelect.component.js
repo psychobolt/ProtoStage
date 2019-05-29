@@ -11,24 +11,23 @@ export default class XSelect extends React.Component<Props> {
     onChange: () => {},
   }
 
+  constructor(props: Props) {
+    super(props);
+    this.ref = React.createRef<EventTarget>();
+  }
+
   componentDidMount() {
     const { onChange } = this.props;
-    if (this.select) this.select.addEventListener('change', onChange);
+    const { current } = this.ref;
+    if (current) current.addEventListener('change', onChange);
   }
 
-  componentWillUnmount() {
-    const { onChange } = this.props;
-    if (this.select) this.select.removeEventListener('change', onChange);
-  }
-
-  setSelect = (ref: ?HTMLElement) => { this.select = ref; };
-
-  select: ?HTMLElement
+  ref: React.RefObject<EventTarget>
 
   render() {
     const { onChange, children, ...rest } = this.props;
     return (
-      <x-select ref={this.setSelect} {...rest}>
+      <x-select ref={this.ref} {...rest}>
         {children}
       </x-select>
     );

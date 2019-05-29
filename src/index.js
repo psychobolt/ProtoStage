@@ -2,7 +2,7 @@ import 'globals';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { routerMiddleware } from 'react-router-redux';
+import { routerMiddleware } from 'connected-react-router';
 import { forwardToMain, replayActionRenderer } from 'electron-redux';
 import { createHashHistory } from 'history';
 
@@ -13,7 +13,7 @@ import Routes from './routes';
 
 const createSaga = history => function* rootSaga() { yield saga(history); };
 const history = createHashHistory();
-const store = configureStore(reducer, undefined, [
+const store = configureStore(reducer(history), undefined, [
   forwardToMain,
   routerMiddleware(history),
 ], createSaga(history));
