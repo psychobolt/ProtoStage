@@ -40,6 +40,8 @@ export default class Scene3D extends React.Component<Props> {
     height: 420,
   }
 
+  modules: any[];
+
   constructor(props: Props) {
     super(props);
     const { width = 680, height = 420 } = props;
@@ -63,8 +65,6 @@ export default class Scene3D extends React.Component<Props> {
       new OrbitControlsModule(),
     ];
   }
-
-  modules: any[];
 
   render() {
     const { container, className } = this.props;

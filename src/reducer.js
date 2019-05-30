@@ -5,7 +5,7 @@ import appReducer from './App/App.reducer';
 import { frameworkReducers } from './Framework';
 
 export default history => combineReducers({
-  ...appReducers,
+  app: appReducer,
   ...frameworkReducers,
   router: connectRouter(history),
 });

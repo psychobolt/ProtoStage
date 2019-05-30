@@ -1,4 +1,5 @@
 const isProduction = process.env.NODE_ENV === 'production';
+const isTest = process.env.BABEL_ENV === 'test';
 
 module.exports = {
   presets: [
@@ -49,7 +50,7 @@ module.exports = {
       },
     }],
     'babel-plugin-styled-components',
-    'react-hot-loader/babel',
+    ...(!isTest ? ['react-hot-loader/babel'] : []),
   ],
   env: {
     commonjs: {
@@ -60,7 +61,7 @@ module.exports = {
     test: {
       plugins: [
         '@babel/plugin-transform-modules-commonjs',
-        'dynamic-import-node-sync',
+        'dynamic-import-node',
       ],
     },
   },
