@@ -72,7 +72,8 @@ let unsubscribe;
 export default (win, store) => {
   if (unsubscribe) unsubscribe();
 
-  const { dispatch, subscribe, getState } = store;
+  const { dispatch, subscribe } = store;
+  const getState = () => ({ app: store.getState() });
   let state = getState();
   const projectLoaded = isProjectLoaded(state);
   const isMac = process.platform === 'darwin';

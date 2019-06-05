@@ -36,6 +36,8 @@ const Container = styled(PaperContainer)`
 `;
 
 export default class Paper extends React.Component<Props> {
+  container: typeof PaperContainer;
+
   constructor(props: Props) {
     super(props);
     this.container = React.createRef();
@@ -46,8 +48,6 @@ export default class Paper extends React.Component<Props> {
   }
 
   onFocus = () => this.container.current.canvas.current.focus()
-
-  container: typeof PaperContainer;
 
   render() {
     const {
@@ -68,7 +68,7 @@ export default class Paper extends React.Component<Props> {
     } = this.props;
     return (
       <Container
-        innerRef={this.container}
+        ref={this.container}
         canvasProps={{
           resize: 'true',
           style: {

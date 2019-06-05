@@ -1,4 +1,5 @@
 import 'raf/polyfill';
+import 'jest-canvas-mock';
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 

@@ -71,10 +71,6 @@ type State = {
 const MOUSE_RIGHT_CODE = 2;
 
 class Canvas extends React.Component<Props, State> {
-  static defaultProps = {
-    menuSlices: [],
-  };
-
   state = {
     mouseX: null,
     mouseY: null,
@@ -83,6 +79,8 @@ class Canvas extends React.Component<Props, State> {
     enableMenu: false,
     focused: false,
   }
+
+  lastActiveTool: string;
 
   onContextMenu = (e: SyntheticMouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -171,8 +169,6 @@ class Canvas extends React.Component<Props, State> {
       </Layer>
     );
   }))
-
-  lastActiveTool: string;
 
   render() {
     const {

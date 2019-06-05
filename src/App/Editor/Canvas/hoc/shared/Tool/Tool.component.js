@@ -23,6 +23,10 @@ export class Tool extends React.Component<Props> implements ITool {
     menuSlices: [],
   }
 
+  TOOL_NAME: string;
+
+  Container: PaperContainer;
+
   constructor(props: Props) {
     super(props);
     this.onSelect = this.onSelect.bind(this);
@@ -40,8 +44,6 @@ export class Tool extends React.Component<Props> implements ITool {
     }
   }
 
-  onSelect: () => void
-
   onSelect() {
     const { setActiveTool } = this.props;
     setActiveTool(this.TOOL_NAME);
@@ -57,10 +59,6 @@ export class Tool extends React.Component<Props> implements ITool {
       if (this.ref.current) this.ref.current.activate();
     }
   }
-
-  TOOL_NAME: string;
-
-  Container: PaperContainer;
 
   render() {
     const { activeTool, setActiveTool, menuSlices, children, ...rest } = this.props;

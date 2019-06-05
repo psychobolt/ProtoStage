@@ -11,6 +11,10 @@ export default class XNumberInput extends React.Component<Props> {
     onChange: () => {},
   }
 
+  input: ?HTMLElement
+
+  value: number
+
   componentDidMount() {
     if (this.input) this.input.addEventListener('change', this.onChange);
   }
@@ -28,10 +32,6 @@ export default class XNumberInput extends React.Component<Props> {
   }
 
   setInput = (ref: ?HTMLElement) => { this.input = ref; };
-
-  input: ?HTMLElement
-
-  value: number
 
   render() {
     const { onChange, children, ...rest } = this.props;

@@ -4,12 +4,12 @@ import windowStateKeeper from 'electron-window-state';
 import path from 'path';
 import url from 'url';
 
-import reducer from './reducer';
+import reducer from './App/App.reducer';
 import { getProject } from './App/App.selectors';
 import { configureStore } from './shared/store';
 import menu from './menu';
 
-const store = configureStore(reducer, {}, middlewares => [
+const store = configureStore(reducer, undefined, middlewares => [
   ...middlewares,
   forwardToRenderer,
 ]);
@@ -78,9 +78,9 @@ async function createWindow() {
 
   renderMenu();
 
-  let prevState = store.getState();
+  let prevState = { app: store.getState() };
   store.subscribe(() => {
-    const state = store.getState();
+    const state = { app: store.getState() };
     if (getProject(prevState).id !== getProject(state).id) {
       renderMenu();
     }

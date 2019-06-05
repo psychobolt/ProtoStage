@@ -73,6 +73,14 @@ type Props = {
 };
 
 export default class Scene2D extends React.Component<Props> {
+  activeBody: PlBody
+
+  pause: () => void
+
+  resume: () => void
+
+  isPaused: () => boolean
+
   componentDidMount() {
     const { registerResizeListener } = this.props;
     registerResizeListener();
@@ -205,14 +213,6 @@ export default class Scene2D extends React.Component<Props> {
       step: this.onStep(testbed),
     };
   })
-
-  activeBody: PlBody
-
-  pause: () => void
-
-  resume: () => void
-
-  isPaused: () => boolean
 
   render() {
     const {
