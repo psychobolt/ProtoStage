@@ -9,7 +9,10 @@ import { getProject } from './App/App.selectors';
 import { configureStore } from './shared/store';
 import menu from './menu';
 
-const store = configureStore(reducer, undefined, [forwardToRenderer]);
+const store = configureStore(reducer, {}, middlewares => [
+  ...middlewares,
+  forwardToRenderer,
+]);
 
 replayActionMain(store);
 

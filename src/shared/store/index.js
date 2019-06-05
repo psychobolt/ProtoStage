@@ -6,10 +6,11 @@ export function* noopSaga() {} // eslint-disable-line no-empty-function
 
 export function configureStore(reducer, initialState, middlewares, sagas = noopSaga) {
   const sagaMiddleware = createSagaMiddleware();
+  const defaultMiddlewares = [sagaMiddleware];
   const store = createStore(
     reducer,
     initialState,
-    composeWithDevTools(applyMiddleware(...middlewares, sagaMiddleware)),
+    composeWithDevTools(applyMiddleware(...middlewares(defaultMiddlewares))),
   );
   sagaMiddleware.run(sagas);
   return store;

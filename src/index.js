@@ -13,9 +13,10 @@ import Routes from './routes';
 
 const createSaga = history => function* rootSaga() { yield saga(history); };
 const history = createHashHistory();
-const store = configureStore(reducer(history), undefined, [
+const store = configureStore(reducer(history), undefined, middlewares => [
   forwardToMain,
   routerMiddleware(history),
+  ...middlewares,
 ], createSaga(history));
 
 replayActionRenderer(store);
