@@ -1,6 +1,5 @@
 import { app, BrowserWindow, Menu } from 'electron';
 import { forwardToRenderer, replayActionMain } from 'electron-redux';
-import windowStateKeeper from 'electron-window-state';
 import path from 'path';
 import url from 'url';
 
@@ -31,24 +30,14 @@ function renderMenu() {
 }
 
 async function createWindow() {
-  const mainWindowState = windowStateKeeper({
-    defaultWidth: 1024,
-    defaultHeight: 768,
-  });
-
   // Create the browser window.
   win = new BrowserWindow({
-    x: mainWindowState.x,
-    y: mainWindowState.y,
-    width: mainWindowState.width,
-    height: mainWindowState.height,
+    width: 1024,
+    height: 768,
     webPreferences: {
       nodeIntegration: true,
     },
   });
-
-  // then register listeners on window, so the state can be updated
-  mainWindowState.manage(win);
 
   // and load the index.html of the app.
   if (process.env.NODE_ENV === 'production') {
