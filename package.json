@@ -167,6 +167,7 @@
     "@psychobolt/react-paperjs-editor": "^0.0.10",
     "connected-react-router": "^6.4.0",
     "electron-redux": "^1.4.0",
+    "electron-store": "^4.0.0",
     "element-resize-event": "^3.0.3",
     "font-awesome": "^4.7.0",
     "hashids": "^1.2.2",
